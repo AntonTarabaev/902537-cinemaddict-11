@@ -2,7 +2,7 @@
 
 const FILM_COUNT = 5;
 const FILM_EXTRA_COUNT = 2;
-const ESC_KEY = 'Escape';
+const ESC_KEY = `Escape`;
 
 const isEscEvent = (evt, action) => {
   if (evt.key === ESC_KEY) {
