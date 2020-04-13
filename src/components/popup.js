@@ -1,4 +1,4 @@
-import {isEscEvent} from "./util.js";
+import {isEscEvent} from "../utils.js";
 
 const removePopup = () => {
   const popupFilmDetails = document.querySelector(`.film-details`);
