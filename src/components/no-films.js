@@ -1,19 +1,19 @@
 import {createElement} from "../utils";
 
-const createFilmsCountTemplate = (filmsCount) => {
+const createNoFilmsTemplate = () => {
   return (
-    `<p>${filmsCount} movies inside</p>`
+    `<h2 class="films-list__title">There are no movies in our database</h2>`
   );
 };
 
-export default class FilmsCount {
-  constructor(filmsCount) {
-    this._filmsCount = filmsCount;
+
+export default class NoFilms {
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmsCountTemplate(this._filmsCount);
+    return createNoFilmsTemplate();
   }
 
   getElement() {

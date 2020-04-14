@@ -1,9 +1,11 @@
-import {formatTime} from "../utils.js";
+import {createElement, formatTime} from "../utils";
 
-export const createFilmCardTemplate = (film) => {
+const MAX_DESCRIPTON_TEXT_LENGTH = 140;
+
+const createFilmCardTemplate = (film) => {
   const {description, duration, releaseDate, rating, isWatched, isFavorite, isInWatchlist, poster, name, genres, commentsCount} = film;
 
-  const descriptionText = description.length > 140 ? `${description.slice(0, 139)}...` : description;
+  const descriptionText = description.length > MAX_DESCRIPTON_TEXT_LENGTH ? `${description.slice(0, MAX_DESCRIPTON_TEXT_LENGTH - 1)}...` : description;
 
   const controlButtonActiveClass = `film-card__controls-item--active`;
 
@@ -27,3 +29,26 @@ export const createFilmCardTemplate = (film) => {
     </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

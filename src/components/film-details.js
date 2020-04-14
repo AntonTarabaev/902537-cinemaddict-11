@@ -1,8 +1,10 @@
-import {MONTH_NAMES} from "../const.js";
-import {formatTime} from "../utils.js";
+import {MONTH_NAMES} from "../consts";
+import {createElement, formatTime} from "../utils";
+
+const MINIMAL_TWO_DIGIT_NUMBER = 10;
 
 const castDateFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
+  return value < MINIMAL_TWO_DIGIT_NUMBER ? `0${value}` : String(value);
 };
 
 const formatDate = (date) => {
@@ -33,7 +35,7 @@ const createCommentsMarkup = (comments) => {
             <img src="./images/emoji/${it.emoji}.png" width="55" height="55" alt="emoji-${it.emoji}">
           </span>
           <div>
-            <p class="film-details__comment-text">${it.text}</p>
+            <p class="film-details__comment-text">${it.text.join(` `)}</p>
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${it.author}</span>
               <span class="film-details__comment-day">${formatDate(it.date)}</span>
@@ -46,7 +48,7 @@ const createCommentsMarkup = (comments) => {
     .join(`\n`);
 };
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film) => {
   const {description, duration, releaseDate, rating, isWatched, isFavorite, isInWatchlist, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
 
   const date = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
@@ -174,3 +176,26 @@ export const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
