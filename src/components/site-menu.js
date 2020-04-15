@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const calculateFilmsCountByFilter = (films, filterName) => {
   let filmsCount = 0;
 
@@ -16,7 +18,7 @@ const calculateFilmsCountByFilter = (films, filterName) => {
   return filmsCount;
 };
 
-export const createSiteMenuTemplate = (films) => {
+const createSiteMenuTemplate = (films) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
@@ -29,3 +31,26 @@ export const createSiteMenuTemplate = (films) => {
     </nav>`
   );
 };
+
+export default class SiteMenu {
+  constructor(films) {
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
