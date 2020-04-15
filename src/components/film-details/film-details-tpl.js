@@ -1,5 +1,5 @@
-import {MONTH_NAMES} from "../consts";
-import {createElement, formatTime} from "../utils";
+import {MONTH_NAMES} from "../../consts";
+import {formatTime} from "../../utils";
 
 const MINIMAL_TWO_DIGIT_NUMBER = 10;
 
@@ -48,7 +48,7 @@ const createCommentsMarkup = (comments) => {
     .join(`\n`);
 };
 
-const createFilmDetailsTemplate = (film) => {
+export const createFilmDetailsTemplate = (film) => {
   const {description, duration, releaseDate, rating, isWatched, isFavorite, isInWatchlist, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
 
   const date = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
@@ -176,26 +176,3 @@ const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
-
-export default class FilmDetails {
-  constructor(film) {
-    this._film = film;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createFilmDetailsTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-}
