@@ -17,10 +17,13 @@ const FilmSettings = {
   EXTRA_COUNT: 2
 };
 
+let prevPopupEscListener = null;
+
 const renderFilmCard = (filmsListElement, siteBodyElement, film) => {
   const removePopup = () => {
     siteBodyElement.removeChild(filmDetailsComponent.getElement());
     document.removeEventListener(`keydown`, onEscKeyDown);
+    document.removeEventListener(`keydown`, prevPopupEscListener);
   };
 
   const onEscKeyDown = (evt) => {
@@ -32,8 +35,14 @@ const renderFilmCard = (filmsListElement, siteBodyElement, film) => {
   };
 
   const renderFilmDetailsElement = () => {
+    const details = document.querySelector(`.film-details`);
+    if (details !== null) {
+      details.remove();
+      document.removeEventListener(`keydown`, prevPopupEscListener);
+    }
     siteBodyElement.appendChild(filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, onEscKeyDown);
+    prevPopupEscListener = onEscKeyDown;
   };
 
   const filmDetailsComponent = new FilmDetailsComponent(film);
