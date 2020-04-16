@@ -5,22 +5,25 @@ import FilmsListsComponent from "./components/films-list";
 import FilmCardComponent from "./components/film-card";
 import NoFilmsComponent from "./components/no-films";
 import ShowMoreButtonComponent from "./components/show-more-button";
-import FilmDetailsComponent from "./components/film-details";
+import FilmDetailsComponent from "./components/film-details/film-details";
 import FilmsCountComponent from "./components/films-count";
 import {generateFilms} from "./mock/film";
 import {render, RenderPosition} from "./utils";
 
 const FilmSettings = {
-  TOTAL_COUNT: 18,
+  TOTAL_COUNT: 22,
   SHOWING_ON_START_COUNT: 5,
   SHOWING_BY_BUTTON: 5,
   EXTRA_COUNT: 2
 };
 
+let prevPopupEscListener = null;
+
 const renderFilmCard = (filmsListElement, siteBodyElement, film) => {
   const removePopup = () => {
     siteBodyElement.removeChild(filmDetailsComponent.getElement());
     document.removeEventListener(`keydown`, onEscKeyDown);
+    document.removeEventListener(`keydown`, prevPopupEscListener);
   };
 
   const onEscKeyDown = (evt) => {
@@ -32,8 +35,14 @@ const renderFilmCard = (filmsListElement, siteBodyElement, film) => {
   };
 
   const renderFilmDetailsElement = () => {
+    const details = document.querySelector(`.film-details`);
+    if (details !== null) {
+      details.remove();
+      document.removeEventListener(`keydown`, prevPopupEscListener);
+    }
     siteBodyElement.appendChild(filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, onEscKeyDown);
+    prevPopupEscListener = onEscKeyDown;
   };
 
   const filmDetailsComponent = new FilmDetailsComponent(film);
@@ -98,7 +107,7 @@ const mostCommentedFilms = films
   .sort((a, b) => b.commentsCount - a.commentsCount)
   .slice(0, FilmSettings.EXTRA_COUNT);
 
-render(siteHeaderElement, new UserRankComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new UserRankComponent(films).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteMenuComponent(films).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilterComponent().getElement(), RenderPosition.BEFOREEND);
 
