@@ -1,18 +1,13 @@
-import {createElement} from "../utils";
+import {createFilterTemplate} from "./filter-tpl";
+import {createElement} from "../../utils";
 
-const createShowMoreButtonTemplate = () => {
-  return (
-    `<button class="films-list__show-more">Show more</button>`
-  );
-};
-
-export default class ShowMoreButton {
+export default class Filter {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createShowMoreButtonTemplate();
+    return createFilterTemplate();
   }
 
   getElement() {

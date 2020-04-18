@@ -1,4 +1,4 @@
-import {calculateFilmsCountByFilter, createElement} from "../utils";
+import {calculateFilmsCountByFilter} from "../../utils";
 
 export const createUserRankTemplate = (films) => {
   const watchedFilms = calculateFilmsCountByFilter(films, `history`);
@@ -19,26 +19,3 @@ export const createUserRankTemplate = (films) => {
     </section>`
   );
 };
-
-export default class UserRank {
-  constructor(films) {
-    this._films = films;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createUserRankTemplate(this._films);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-}

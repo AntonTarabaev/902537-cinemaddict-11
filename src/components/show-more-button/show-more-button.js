@@ -1,14 +1,13 @@
-import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {createShowMoreButtonTemplate} from "./show-more-button-tpl";
 import {createElement} from "../../utils";
 
-export default class FilmDetails {
-  constructor(film) {
-    this._film = film;
+export default class ShowMoreButton {
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createShowMoreButtonTemplate();
   }
 
   getElement() {

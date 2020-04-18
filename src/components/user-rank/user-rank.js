@@ -1,14 +1,14 @@
-import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {createUserRankTemplate} from "./user-rank-tpl";
 import {createElement} from "../../utils";
 
-export default class FilmDetails {
-  constructor(film) {
-    this._film = film;
+export default class UserRank {
+  constructor(films) {
+    this._films = films;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createUserRankTemplate(this._films);
   }
 
   getElement() {

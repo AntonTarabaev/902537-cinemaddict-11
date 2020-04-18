@@ -1,14 +1,14 @@
-import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {createSiteMenuTemplate} from "./site-menu-tpl";
 import {createElement} from "../../utils";
 
-export default class FilmDetails {
-  constructor(film) {
-    this._film = film;
+export default class SiteMenu {
+  constructor(films) {
+    this._films = films;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createSiteMenuTemplate(this._films);
   }
 
   getElement() {

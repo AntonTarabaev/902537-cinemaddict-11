@@ -45,3 +45,5 @@ export const render = (container, element, place) => {
       break;
   }
 };
+
+export const isEscPressed = (evt) => evt.key === `Escape` || evt.key === `Esc`;

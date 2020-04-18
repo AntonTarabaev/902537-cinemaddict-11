@@ -1,14 +1,14 @@
-import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {createFilmCardTemplate} from "./film-card-tpl";
 import {createElement} from "../../utils";
 
-export default class FilmDetails {
+export default class FilmCard {
   constructor(film) {
     this._film = film;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createFilmCardTemplate(this._film);
   }
 
   getElement() {

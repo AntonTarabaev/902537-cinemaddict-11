@@ -1,10 +1,5 @@
-import {createElement} from "../utils";
-
-const createFilmsCountTemplate = (filmsCount) => {
-  return (
-    `<p>${filmsCount} movies inside</p>`
-  );
-};
+import {createFilmsCountTemplate} from "./films-count-tpl";
+import {createElement} from "../../utils";
 
 export default class FilmsCount {
   constructor(filmsCount) {
