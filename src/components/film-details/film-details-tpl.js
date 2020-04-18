@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from "../../consts";
-import {formatTime} from "../../utils";
+import {formatTime} from "../../utils/common";
 
 const MINIMAL_TWO_DIGIT_NUMBER = 10;
 

@@ -1,4 +1,4 @@
-import {calculateFilmsCountByFilter} from "../../utils";
+import {calculateFilmsCountByFilter} from "../../utils/common";
 
 export const createSiteMenuTemplate = (films) => {
   const watchlistFilmsCount = calculateFilmsCountByFilter(films, `watchlist`);

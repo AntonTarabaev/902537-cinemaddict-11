@@ -1,25 +1,28 @@
+import AbstractComponent from "../abstract-component";
 import {createFilmCardTemplate} from "./film-card-tpl";
-import {createElement} from "../../utils";
 
-export default class FilmCard {
+const FILM_CARD_ELEMENTS = [
+  `film-card__title`,
+  `film-card__poster`,
+  `film-card__comments`
+];
+
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setElementsClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (FILM_CARD_ELEMENTS.some((element) => evt.target.classList.contains(element))) {
+        handler();
+      }
+    });
   }
 }
