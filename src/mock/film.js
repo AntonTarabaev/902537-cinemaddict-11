@@ -99,7 +99,7 @@ const generateComment = () => {
       .sort(() => Math.random() - 0.5)
       .slice(0, getRandomIntegerNumber(1, 5)),
     date,
-    emoji: getRandomArrayItem(EMOJI),
+    emoji: getRandomArrayItem(Object.values(EMOJI)),
     author: getRandomArrayItem(AuthorItems),
   };
 };

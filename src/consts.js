@@ -1,4 +1,11 @@
-export const EMOJI = [`angry`, `puke`, `sleeping`, `smile`];
+export const FILMS_TOTAL_COUNT = 12;
+
+export const EMOJI = {
+  ANGRY: `angry`,
+  PUKE: `puke`,
+  SLEEPING: `sleeping`,
+  SMILE: `smile`,
+};
 
 export const MONTH_NAMES = [
   `January`,
