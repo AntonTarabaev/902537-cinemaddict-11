@@ -1,10 +1,9 @@
-import PageController from "./controllers/page";
+import PageController from "./controllers/page/page";
 import UserRankComponent from "./components/user-rank/user-rank";
 import FilmsCountComponent from "./components/films-count/films-count";
 import {generateFilms} from "./mock/film";
 import {render, RenderPosition} from "./utils/render";
-
-const FILMS_TOTAL_COUNT = 12;
+import {FILMS_TOTAL_COUNT} from "./consts";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);

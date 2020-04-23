@@ -1,5 +1,6 @@
 import {MONTH_NAMES} from "../../consts";
 import {formatTime} from "../../utils/common";
+import {EMOJI} from "../../consts";
 
 const MINIMAL_TWO_DIGIT_NUMBER = 10;
 
@@ -48,13 +49,20 @@ const createCommentsMarkup = (comments) => {
     .join(`\n`);
 };
 
-export const createFilmDetailsTemplate = (film) => {
+const createEmojiMarkup = (emoji) => {
+  return (
+    `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`
+  );
+};
+
+export const createFilmDetailsTemplate = (film, emoji) => {
   const {description, duration, releaseDate, rating, isWatched, isFavorite, isInWatchlist, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
 
   const date = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
 
   const genresMarkup = createGenresMarkup(genres);
   const commentsMarkup = createCommentsMarkup(comments);
+  const emojiMarkup = emoji ? createEmojiMarkup(emoji) : ``;
 
   return (
     `<section class="film-details">
@@ -142,29 +150,31 @@ export const createFilmDetailsTemplate = (film) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+                ${emojiMarkup}
+              </div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
               </label>
 
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${emoji === EMOJI.SMILE ? `checked` : ``}>
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${emoji === EMOJI.SLEEPING ? `checked` : ``}>
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${emoji === EMOJI.PUKE ? `checked` : ``}>
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${emoji === EMOJI.ANGRY ? `checked` : ``}>
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
