@@ -1,19 +1,8 @@
-import {MONTH_NAMES} from "../../consts";
+import moment from "moment";
 import {formatTime} from "../../utils/common";
 
-const MINIMAL_TWO_DIGIT_NUMBER = 10;
-
-const castDateFormat = (value) => {
-  return value < MINIMAL_TWO_DIGIT_NUMBER ? `0${value}` : String(value);
-};
-
 const formatDate = (date) => {
-  const hours = castDateFormat(date.getHours());
-  const minutes = castDateFormat(date.getMinutes());
-  const months = castDateFormat(date.getMonth());
-  const days = castDateFormat(date.getDate());
-
-  return `${date.getFullYear()}/${months}/${days} ${hours}:${minutes}`;
+  return moment(date).startOf(`minute`).fromNow();
 };
 
 const createGenresMarkup = (genres) => {
@@ -58,7 +47,7 @@ export const createFilmDetailsTemplate = (film, options = {}) => {
   const {description, duration, releaseDate, rating, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
   const {isWatched, isFavorite, isInWatchlist} = options;
 
-  const date = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
+  const date = moment(releaseDate).format(`DD MMMM YYYY`);
 
   const genresMarkup = createGenresMarkup(genres);
   const commentsMarkup = createCommentsMarkup(comments);

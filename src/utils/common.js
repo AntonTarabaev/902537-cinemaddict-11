@@ -1,8 +1,7 @@
-export const formatTime = (durationInMinutes) => {
-  const hours = Math.floor(durationInMinutes / 60);
-  const minutes = durationInMinutes - hours * 60;
+import moment from "moment";
 
-  return `${hours > 0 ? `${hours}h ` : ``}${minutes}m`;
+export const formatTime = (durationInMinutes) => {
+  return moment.utc().startOf(`day`).add({minutes: durationInMinutes}).format(`${durationInMinutes > 60 ? `h[h]` : ``} mm[m]`);
 };
 
 export const calculateFilmsCountByFilter = (films, filterName) => {

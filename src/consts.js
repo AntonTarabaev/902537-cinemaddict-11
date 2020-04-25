@@ -6,18 +6,3 @@ export const EMOJI = {
   SLEEPING: `sleeping`,
   SMILE: `smile`,
 };
-
-export const MONTH_NAMES = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`,
-];
