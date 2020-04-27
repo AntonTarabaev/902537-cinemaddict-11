@@ -112,6 +112,7 @@ export default class PageController {
 
     this._showedMovieControllers = newFilms;
 
+    remove(this._showMoreButtonComponent);
     this._renderShowMoreButton();
   }
 }

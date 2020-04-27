@@ -17,58 +17,27 @@ export default class MovieController {
     this._state = State.CLOSED;
 
     this._filmCardComponent = null;
+    this._oldFilmCardComponent = null;
     this._filmDetailsComponent = null;
+    this._oldFilmDetailsComponent = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   render(film) {
-    const oldFilmCardComponent = this._filmCardComponent;
-    const oldFilmDetailsComponent = this._filmDetailsComponent;
+    this._film = film;
 
-    this._filmCardComponent = new FilmCardComponent(film);
-    this._filmDetailsComponent = new FilmDetailsComponent(film);
+    if (!this._filmCardComponent && !this._filmDetailsComponent) {
+      this._renderFilmCard();
+      this._renderFilmDetails();
 
-    this._filmCardComponent.setElementsClickHandler(() => {
-      this._openFilmDetails();
-    });
-
-    this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._changeFilmWhatchlistPropery(film);
-    });
-
-    this._filmCardComponent.setWatchedButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._changeFilmWhatchedtPropery(film);
-    });
-
-    this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
-      evt.preventDefault();
-      this._changeFilmFavoritePropery(film);
-    });
-
-    this._filmDetailsComponent.setWatchlistButtonClickHandler(() => {
-      this._changeFilmWhatchlistPropery(film);
-    });
-
-    this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
-      this._changeFilmWhatchedtPropery(film);
-    });
-
-    this._filmDetailsComponent.setFavoriteButtonClickHandler(() => {
-      this._changeFilmFavoritePropery(film);
-    });
-
-    this._filmDetailsComponent.setCloseButtonClickHandler(() => {
-      this._closeFilmDetails();
-    });
-
-    if (oldFilmCardComponent && oldFilmDetailsComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
-      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
-    } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    } else if (this._state === State.CLOSED) {
+      this._renderFilmDetails();
+      replace(this._filmDetailsComponent, this._oldFilmDetailsComponent);
+    } else if (this._state === State.OPENED) {
+      this._renderFilmCard();
+      replace(this._filmCardComponent, this._oldFilmCardComponent);
     }
   }
 
@@ -76,6 +45,48 @@ export default class MovieController {
     if (this._state !== State.CLOSED) {
       this._closeFilmDetails();
     }
+  }
+
+  _renderFilmDetails() {
+    this._oldFilmDetailsComponent = this._filmDetailsComponent;
+    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
+
+    this._filmDetailsComponent.setWatchlistButtonClickHandler(() => {
+      this._changeFilmWhatchlistPropery(this._film);
+    });
+
+    this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
+      this._changeFilmWhatchedtPropery(this._film);
+    });
+
+    this._filmDetailsComponent.setFavoriteButtonClickHandler(() => {
+      this._changeFilmFavoritePropery(this._film);
+    });
+
+    this._filmDetailsComponent.setCloseButtonClickHandler(() => {
+      this._closeFilmDetails();
+    });
+  }
+
+  _renderFilmCard() {
+    this._oldFilmCardComponent = this._filmCardComponent;
+    this._filmCardComponent = new FilmCardComponent(this._film);
+
+    this._filmCardComponent.setElementsClickHandler(() => {
+      this._openFilmDetails();
+    });
+
+    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
+      this._changeFilmWhatchlistPropery(this._film);
+    });
+
+    this._filmCardComponent.setWatchedButtonClickHandler(() => {
+      this._changeFilmWhatchedtPropery(this._film);
+    });
+
+    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
+      this._changeFilmFavoritePropery(this._film);
+    });
   }
 
   _openFilmDetails() {
@@ -89,7 +100,7 @@ export default class MovieController {
 
   _closeFilmDetails() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._filmDetailsComponent.reset();
+    this._filmDetailsComponent.reset(this._film);
     this._filmDetailsComponent.getElement().remove();
     this._state = State.CLOSED;
   }

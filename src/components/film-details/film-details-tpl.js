@@ -1,20 +1,8 @@
-import {MONTH_NAMES} from "../../consts";
+import moment from "moment";
 import {formatTime} from "../../utils/common";
-import {EMOJI} from "../../consts";
-
-const MINIMAL_TWO_DIGIT_NUMBER = 10;
-
-const castDateFormat = (value) => {
-  return value < MINIMAL_TWO_DIGIT_NUMBER ? `0${value}` : String(value);
-};
 
 const formatDate = (date) => {
-  const hours = castDateFormat(date.getHours());
-  const minutes = castDateFormat(date.getMinutes());
-  const months = castDateFormat(date.getMonth());
-  const days = castDateFormat(date.getDate());
-
-  return `${date.getFullYear()}/${months}/${days} ${hours}:${minutes}`;
+  return moment(date).startOf(`minute`).fromNow();
 };
 
 const createGenresMarkup = (genres) => {
@@ -49,20 +37,20 @@ const createCommentsMarkup = (comments) => {
     .join(`\n`);
 };
 
-const createEmojiMarkup = (emoji) => {
+export const createEmojiMarkup = (emoji) => {
   return (
     `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`
   );
 };
 
-export const createFilmDetailsTemplate = (film, emoji) => {
-  const {description, duration, releaseDate, rating, isWatched, isFavorite, isInWatchlist, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
+export const createFilmDetailsTemplate = (film, options = {}) => {
+  const {description, duration, releaseDate, rating, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
+  const {isWatched, isFavorite, isInWatchlist} = options;
 
-  const date = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
+  const date = moment(releaseDate).format(`DD MMMM YYYY`);
 
   const genresMarkup = createGenresMarkup(genres);
   const commentsMarkup = createCommentsMarkup(comments);
-  const emojiMarkup = emoji ? createEmojiMarkup(emoji) : ``;
 
   return (
     `<section class="film-details">
@@ -151,7 +139,6 @@ export const createFilmDetailsTemplate = (film, emoji) => {
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
-                ${emojiMarkup}
               </div>
 
               <label class="film-details__comment-label">
@@ -159,22 +146,22 @@ export const createFilmDetailsTemplate = (film, emoji) => {
               </label>
 
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${emoji === EMOJI.SMILE ? `checked` : ``}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${emoji === EMOJI.SLEEPING ? `checked` : ``}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${emoji === EMOJI.PUKE ? `checked` : ``}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${emoji === EMOJI.ANGRY ? `checked` : ``}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>

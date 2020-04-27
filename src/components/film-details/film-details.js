@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "../abstract-smart-component";
-import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {createFilmDetailsTemplate, createEmojiMarkup} from "./film-details-tpl";
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
@@ -7,6 +7,9 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._film = film;
     this._emoji = null;
+    this._isWatched = film.isWatched;
+    this._isInWatchlist = film.isInWatchlist;
+    this._isFavorite = film.isFavorite;
 
     this._closeButtonClickHandler = null;
     this._watchlistButtonClickHandler = null;
@@ -17,15 +20,22 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film, this._emoji);
+    return createFilmDetailsTemplate(this._film, {
+      isWatched: this._isWatched,
+      isInWatchlist: this._isInWatchlist,
+      isFavorite: this._isFavorite,
+    });
   }
 
   rerender() {
     super.rerender();
   }
 
-  reset() {
+  reset(film) {
     this._emoji = null;
+    this._isWatched = film.isWatched;
+    this._isInWatchlist = film.isInWatchlist;
+    this._isFavorite = film.isFavorite;
 
     this.rerender();
   }
@@ -65,12 +75,13 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
 
     element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
       it.addEventListener(`click`, () => {
-        this._emoji = it.value;
+        emojiContainer.innerHTML = createEmojiMarkup(it.value);
 
-        this.rerender();
+        this._emoji = it.value;
       });
     });
   }

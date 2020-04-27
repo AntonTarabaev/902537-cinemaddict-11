@@ -15,17 +15,11 @@ export const getFilteredFilms = (films, filterType, from, to) => {
   let filteredFilms = [];
 
   switch (filterType) {
-    case FilterType.DATE_DOWN:
+    case FilterType.DATE:
       filteredFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
       break;
-    case FilterType.DATE_UP:
-      filteredFilms = films.slice().sort((a, b) => a.releaseDate - b.releaseDate);
-      break;
-    case FilterType.RATING_DOWN:
+    case FilterType.RATING:
       filteredFilms = films.slice().sort((a, b) => b.rating - a.rating);
-      break;
-    case FilterType.RATING_UP:
-      filteredFilms = films.slice().sort((a, b) => a.rating - b.rating);
       break;
     case FilterType.DEFAULT:
       filteredFilms = films;

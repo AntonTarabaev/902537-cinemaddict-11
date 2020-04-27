@@ -3,10 +3,8 @@ import {createFilterTemplate} from "./filter-tpl";
 
 export const FilterType = {
   DEFAULT: `default`,
-  DATE_UP: `date-up`,
-  DATE_DOWN: `date-down`,
-  RATING_UP: `rating-up`,
-  RATING_DOWN: `rating-down`,
+  DATE: `date`,
+  RATING: `rating`,
 };
 
 export default class Filter extends AbstractComponent {
@@ -34,21 +32,13 @@ export default class Filter extends AbstractComponent {
 
       const filterType = evt.target.dataset.filterType;
 
-      if (this._currentFilterType === filterType === FilterType.DEFAULT) {
+      if (this._currentFilterType === filterType) {
         return;
       }
 
-      if (this._currentFilterType === filterType) {
-        if (filterType === FilterType.DATE_DOWN) {
-          this._currentFilterType = FilterType.DATE_UP;
-        } else if (filterType === FilterType.RATING_DOWN) {
-          this._currentFilterType = FilterType.RATING_UP;
-        }
-      } else {
-        this.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
-        evt.target.classList.add(`sort__button--active`);
-        this._currentFilterType = filterType;
-      }
+      this.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
+      evt.target.classList.add(`sort__button--active`);
+      this._currentFilterType = filterType;
 
       handler(this._currentFilterType);
     });
