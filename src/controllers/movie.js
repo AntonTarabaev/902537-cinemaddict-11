@@ -1,7 +1,7 @@
 import FilmCardComponent from "../components/film-card/film-card";
 import FilmDetailsComponent from "../components/film-details/film-details";
 import {isEscPressed} from "../utils/common";
-import {render, RenderPosition, replace} from "../utils/render";
+import {render, RenderPosition, replace, remove} from "../utils/render";
 
 const State = {
   OPENED: `opened`,
@@ -35,7 +35,7 @@ export default class MovieController {
     } else if (this._state === State.CLOSED) {
       this._renderFilmDetails();
       replace(this._filmDetailsComponent, this._oldFilmDetailsComponent);
-    } else if (this._state === State.OPENED) {
+    } else {
       this._renderFilmCard();
       replace(this._filmCardComponent, this._oldFilmCardComponent);
     }
@@ -45,6 +45,12 @@ export default class MovieController {
     if (this._state !== State.CLOSED) {
       this._closeFilmDetails();
     }
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _renderFilmDetails() {

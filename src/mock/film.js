@@ -115,6 +115,7 @@ const generateFilm = () => {
   const commentsCount = getRandomIntegerNumber(0, 5);
 
   return {
+    id: String(new Date() + Math.random()),
     name: getRandomArrayItem(NameItems),
     originalName: getRandomArrayItem(NameItems),
     description: DescriptionItems

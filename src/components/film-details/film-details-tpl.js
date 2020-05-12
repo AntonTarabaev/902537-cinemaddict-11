@@ -1,9 +1,4 @@
-import moment from "moment";
-import {formatTime} from "../../utils/common";
-
-const formatDate = (date) => {
-  return moment(date).startOf(`minute`).fromNow();
-};
+import {formatTime, formatDate, formatCommentDate} from "../../utils/common";
 
 const createGenresMarkup = (genres) => {
   return genres
@@ -27,7 +22,7 @@ const createCommentsMarkup = (comments) => {
             <p class="film-details__comment-text">${it.text.join(` `)}</p>
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${it.author}</span>
-              <span class="film-details__comment-day">${formatDate(it.date)}</span>
+              <span class="film-details__comment-day">${formatCommentDate(it.date)}</span>
               <button class="film-details__comment-delete">Delete</button>
             </p>
           </div>
@@ -47,7 +42,7 @@ export const createFilmDetailsTemplate = (film, options = {}) => {
   const {description, duration, releaseDate, rating, poster, name, originalName, genres, comments, contentRating, director, writers, actors, country} = film;
   const {isWatched, isFavorite, isInWatchlist} = options;
 
-  const date = moment(releaseDate).format(`DD MMMM YYYY`);
+  const date = formatDate(releaseDate);
 
   const genresMarkup = createGenresMarkup(genres);
   const commentsMarkup = createCommentsMarkup(comments);

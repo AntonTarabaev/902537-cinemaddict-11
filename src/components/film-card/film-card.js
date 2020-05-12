@@ -18,6 +18,12 @@ export default class FilmCard extends AbstractComponent {
     return createFilmCardTemplate(this._film);
   }
 
+  _onBtnClick(evt, handler) {
+    evt.preventDefault();
+    evt.target.classList.toggle(`film-card__controls-item--active`);
+    handler();
+  }
+
   setElementsClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (FILM_CARD_ELEMENTS.some((element) => evt.target.classList.contains(element))) {
@@ -43,11 +49,5 @@ export default class FilmCard extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, (evt) => {
       this._onBtnClick(evt, handler);
     });
-  }
-
-  _onBtnClick(evt, handler) {
-    evt.preventDefault();
-    evt.target.classList.toggle(`film-card__controls-item--active`);
-    handler();
   }
 }

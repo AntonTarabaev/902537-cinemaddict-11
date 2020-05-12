@@ -49,6 +49,19 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
+    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
+      it.addEventListener(`click`, () => {
+        emojiContainer.innerHTML = createEmojiMarkup(it.value);
+
+        this._emoji = it.value;
+      });
+    });
+  }
+
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
 
@@ -71,18 +84,5 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
 
     this._favoriteButtonClickHandler = handler;
-  }
-
-  _subscribeOnEvents() {
-    const element = this.getElement();
-    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
-
-    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
-      it.addEventListener(`click`, () => {
-        emojiContainer.innerHTML = createEmojiMarkup(it.value);
-
-        this._emoji = it.value;
-      });
-    });
   }
 }

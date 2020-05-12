@@ -1,7 +1,8 @@
-import {calculateFilmsCountByFilter} from "../../utils/common";
+import {getFilmsBySort} from "../../utils/sort";
+import {SortType} from "../../consts";
 
 export const createUserRankTemplate = (films) => {
-  const watchedFilms = calculateFilmsCountByFilter(films, `history`);
+  const watchedFilms = getFilmsBySort(films, SortType.HISTORY).length;
   let userRank = ``;
 
   if (watchedFilms > 20) {
