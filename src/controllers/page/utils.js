@@ -1,4 +1,4 @@
-import {FilterType} from "../../consts";
+import {FilterType} from "MainConsts";
 
 export const getFilteredFilms = (films, filterType, from, to) => {
   let filteredFilms = [];

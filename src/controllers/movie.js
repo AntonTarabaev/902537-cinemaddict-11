@@ -1,7 +1,15 @@
-import FilmCardComponent from "../components/film-card/film-card";
-import FilmDetailsComponent from "../components/film-details/film-details";
-import {isEscPressed} from "../utils/common";
-import {render, RenderPosition, replace, remove} from "../utils/render";
+import FilmCardComponent from "Components/film-card/film-card";
+import FilmDetailsComponent from "Components/film-details/film-details";
+import CommentsController from "Controllers/comment";
+import {isEscPressed} from "Utils/common";
+import {render, RenderPosition, replace, remove} from "Utils/render";
+
+const renderFilmComments = (container, film, onCommentDataChange) => {
+  const commentsController = new CommentsController(container, onCommentDataChange);
+  commentsController.render(film);
+
+  return commentsController;
+};
 
 const State = {
   OPENED: `opened`,
@@ -9,17 +17,24 @@ const State = {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, onFilmDataChange, commentsModel) {
     this._container = container;
+
+    this._commentsModel = commentsModel;
+    this._commentsConroller = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._onFilmDataChange = onFilmDataChange;
     this._state = State.CLOSED;
 
     this._filmCardComponent = null;
-    this._oldFilmCardComponent = null;
     this._filmDetailsComponent = null;
-    this._oldFilmDetailsComponent = null;
+
+    this._onCommentChange = this._onCommentChange.bind(this);
+    this._onCommentDataChange = this._onCommentDataChange.bind(this);
+
+    this._commentsModel.setDataChangeHandler(this._onCommentChange);
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -96,37 +111,80 @@ export default class MovieController {
   }
 
   _openFilmDetails() {
+    this._renderFilmDetails();
     const siteMainElement = document.querySelector(`.main`);
 
     this._onViewChange();
     render(siteMainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+    this._renderComments();
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._state = State.OPENED;
   }
 
   _closeFilmDetails() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._filmDetailsComponent.reset(this._film);
+    this._filmDetailsComponent.reset();
     this._filmDetailsComponent.getElement().remove();
     this._state = State.CLOSED;
+  }
+
+  _removeComments() {
+    this._commentsConroller.destroy();
+    this._commentsConroller = null;
+  }
+
+  _renderComments() {
+    const commentsContainer = this._filmDetailsComponent.getCommentsContainer();
+
+    this._commentsConroller = renderFilmComments(commentsContainer, this._commentsModel.getComments(), this._onCommentDataChange);
+  }
+
+  _updateComments() {
+    this._removeComments();
+    this._renderComments();
   }
 
   _changeFilmWhatchlistPropery(film) {
     this._onDataChange(this, film, Object.assign({}, film, {
       isInWatchlist: !film.isInWatchlist,
     }));
+    this._onFilmDataChange(this);
   }
 
   _changeFilmWhatchedtPropery(film) {
     this._onDataChange(this, film, Object.assign({}, film, {
       isWatched: !film.isWatched,
     }));
+    this._onFilmDataChange(this);
   }
 
   _changeFilmFavoritePropery(film) {
     this._onDataChange(this, film, Object.assign({}, film, {
       isFavorite: !film.isFavorite,
     }));
+    this._onFilmDataChange(this);
+  }
+
+  _changeFilmComments(film) {
+    this._onDataChange(this, film, Object.assign({}, film, {
+      commentsCount: this._commentsModel.getComments().length,
+      comments: this._commentsModel.getComments(),
+    }));
+    this._onFilmDataChange(this);
+  }
+
+  _onCommentDataChange(oldDataId, newData) {
+    if (newData === null) {
+      this._commentsModel.removeComment(oldDataId);
+    } else {
+      this._commentsModel.addComment(newData);
+    }
+    this._onFilmDataChange();
+  }
+
+  _onCommentChange() {
+    this._updateComments();
+    this._changeFilmComments(this._film);
   }
 
   _onEscKeyDown(evt) {

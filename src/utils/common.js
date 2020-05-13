@@ -1,3 +1,4 @@
+import {AllowedCommentTextLength} from "MainConsts";
 import moment from "moment";
 
 export const formatTime = (durationInMinutes) => {
@@ -12,4 +13,12 @@ export const formatCommentDate = (date) => {
   return moment(date).startOf(`minute`).fromNow();
 };
 
+export const isAllowedCommentLength = (commentText) => {
+  const length = commentText.length;
+
+  return length >= AllowedCommentTextLength.MIN && length <= AllowedCommentTextLength.MAX;
+};
+
 export const isEscPressed = (evt) => evt.key === `Escape` || evt.key === `Esc`;
+
+export const isCtrlEnterPressed = (evt) => evt.ctrlKey && evt.key === `Enter`;

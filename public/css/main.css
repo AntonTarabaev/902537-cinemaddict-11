@@ -80,6 +80,12 @@ button {
   flex-shrink: 0;
 }
 
+.invalid-comment {
+  box-shadow:
+    0 0 10px red,
+    0 0 0 1px red inset;
+}
+
 .logo {
   cursor: default;
   font-size: 28px;

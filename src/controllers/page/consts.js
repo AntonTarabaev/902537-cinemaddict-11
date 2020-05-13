@@ -4,7 +4,8 @@ export const FilmSettings = {
   EXTRA_COUNT: 2,
 };
 
-export const ExtraFilmsListName = {
+export const filmsListName = {
+  ALL: `All movies. Upcoming`,
   RATED: `Top rated`,
   COMMENTED: `Most commented`,
 };

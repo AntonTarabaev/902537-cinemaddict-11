@@ -1,4 +1,4 @@
-import AbstractComponent from "../abstract-component";
+import AbstractComponent from "Components/abstract/abstract-component";
 import {createFilmCardTemplate} from "./film-card-tpl";
 
 const FILM_CARD_ELEMENTS = [
@@ -16,12 +16,6 @@ export default class FilmCard extends AbstractComponent {
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
-  }
-
-  _onBtnClick(evt, handler) {
-    evt.preventDefault();
-    evt.target.classList.toggle(`film-card__controls-item--active`);
-    handler();
   }
 
   setElementsClickHandler(handler) {
@@ -49,5 +43,11 @@ export default class FilmCard extends AbstractComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, (evt) => {
       this._onBtnClick(evt, handler);
     });
+  }
+
+  _onBtnClick(evt, handler) {
+    evt.preventDefault();
+    evt.target.classList.toggle(`film-card__controls-item--active`);
+    handler();
   }
 }

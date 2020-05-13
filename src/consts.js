@@ -27,3 +27,8 @@ export const SortTexts = new Map([
   [`history`, `History`],
   [`favorites`, `Favorites`],
 ]);
+
+export const AllowedCommentTextLength = {
+  MIN: 5,
+  MAX: 150,
+};

@@ -1,6 +1,6 @@
-import AbstractComponent from "../abstract-component";
+import AbstractComponent from "Components/abstract/abstract-component";
 import {createFilterTemplate} from "./filter-tpl";
-import {FilterType} from "../../consts";
+import {FilterType} from "MainConsts";
 
 export default class Filter extends AbstractComponent {
   constructor() {

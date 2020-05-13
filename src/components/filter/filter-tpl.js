@@ -1,4 +1,4 @@
-import {FilterType} from "../../consts";
+import {FilterType} from "MainConsts";
 
 export const createFilterTemplate = () => {
   return (

@@ -1,4 +1,4 @@
-import {EMOJI} from "../consts";
+import {EMOJI} from "MainConsts";
 
 const NameItems = [
   `Made for Each Other`,
@@ -95,6 +95,7 @@ const generateComment = () => {
   const date = getRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     text: DescriptionItems
       .sort(() => Math.random() - 0.5)
       .slice(0, getRandomIntegerNumber(1, 5)),

@@ -1,4 +1,4 @@
-import {SortType} from "../consts";
+import {SortType} from "MainConsts";
 
 const getWatchedFilms = (films) => {
   return films.filter((film) => film.isWatched);

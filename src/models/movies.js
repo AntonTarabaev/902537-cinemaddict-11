@@ -1,5 +1,5 @@
-import {SortType} from "../consts";
-import {getFilmsBySort} from "../utils/sort";
+import {SortType} from "MainConsts";
+import {getFilmsBySort} from "Utils/sort";
 
 export default class Movies {
   constructor() {
