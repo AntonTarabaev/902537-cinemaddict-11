@@ -1,4 +1,4 @@
-import {EMOJI} from "../consts";
+import {EMOJI} from "MainConsts";
 
 const NameItems = [
   `Made for Each Other`,
@@ -95,6 +95,7 @@ const generateComment = () => {
   const date = getRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     text: DescriptionItems
       .sort(() => Math.random() - 0.5)
       .slice(0, getRandomIntegerNumber(1, 5)),
@@ -115,6 +116,7 @@ const generateFilm = () => {
   const commentsCount = getRandomIntegerNumber(0, 5);
 
   return {
+    id: String(new Date() + Math.random()),
     name: getRandomArrayItem(NameItems),
     originalName: getRandomArrayItem(NameItems),
     description: DescriptionItems

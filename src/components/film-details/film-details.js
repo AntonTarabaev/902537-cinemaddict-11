@@ -1,12 +1,11 @@
-import AbstractSmartComponent from "../abstract-smart-component";
-import {createFilmDetailsTemplate, createEmojiMarkup} from "./film-details-tpl";
+import AbstractSmartComponent from "Components/abstract/abstract-smart-component";
+import {createFilmDetailsTemplate} from "./film-details-tpl";
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
 
     this._film = film;
-    this._emoji = null;
     this._isWatched = film.isWatched;
     this._isInWatchlist = film.isInWatchlist;
     this._isFavorite = film.isFavorite;
@@ -15,8 +14,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._watchlistButtonClickHandler = null;
     this._watchedButtonClickHandler = null;
     this._favoriteButtonClickHandler = null;
-
-    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -27,12 +24,17 @@ export default class FilmDetails extends AbstractSmartComponent {
     });
   }
 
+  getCommentsContainer() {
+    return this.getElement().querySelector(`.form-details__bottom-container`);
+  }
+
   rerender() {
     super.rerender();
   }
 
-  reset(film) {
-    this._emoji = null;
+  reset() {
+    const film = this._film;
+
     this._isWatched = film.isWatched;
     this._isInWatchlist = film.isInWatchlist;
     this._isFavorite = film.isFavorite;
@@ -45,8 +47,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
     this.setWatchedButtonClickHandler(this._watchedButtonClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
-
-    this._subscribeOnEvents();
   }
 
   setCloseButtonClickHandler(handler) {
@@ -71,18 +71,5 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
 
     this._favoriteButtonClickHandler = handler;
-  }
-
-  _subscribeOnEvents() {
-    const element = this.getElement();
-    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
-
-    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
-      it.addEventListener(`click`, () => {
-        emojiContainer.innerHTML = createEmojiMarkup(it.value);
-
-        this._emoji = it.value;
-      });
-    });
   }
 }

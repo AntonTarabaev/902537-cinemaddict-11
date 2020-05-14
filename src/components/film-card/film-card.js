@@ -1,4 +1,4 @@
-import AbstractComponent from "../abstract-component";
+import AbstractComponent from "Components/abstract/abstract-component";
 import {createFilmCardTemplate} from "./film-card-tpl";
 
 const FILM_CARD_ELEMENTS = [
