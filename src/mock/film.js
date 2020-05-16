@@ -1,4 +1,4 @@
-import {EMOJI} from "MainConsts";
+import {EMOJI} from "@consts";
 
 const NameItems = [
   `Made for Each Other`,

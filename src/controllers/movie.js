@@ -1,15 +1,8 @@
-import FilmCardComponent from "Components/film-card/film-card";
-import FilmDetailsComponent from "Components/film-details/film-details";
-import CommentsController from "Controllers/comment";
-import {isEscPressed} from "Utils/common";
-import {render, RenderPosition, replace, remove} from "Utils/render";
-
-const renderFilmComments = (container, film, onCommentDataChange) => {
-  const commentsController = new CommentsController(container, onCommentDataChange);
-  commentsController.render(film);
-
-  return commentsController;
-};
+import FilmCardComponent from "@components/film-card/film-card";
+import FilmDetailsComponent from "@components/film-details/film-details";
+import CommentsController from "@controllers/comment";
+import {isEscPressed} from "@utils/common";
+import {render, RenderPosition, replace, remove} from "@utils/render";
 
 const State = {
   OPENED: `opened`,
@@ -47,7 +40,10 @@ export default class MovieController {
       this._renderFilmDetails();
 
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
-    } else if (this._state === State.CLOSED) {
+      return;
+    }
+
+    if (this._state === State.CLOSED) {
       this._renderFilmDetails();
       replace(this._filmDetailsComponent, this._oldFilmDetailsComponent);
     } else {
@@ -136,7 +132,8 @@ export default class MovieController {
   _renderComments() {
     const commentsContainer = this._filmDetailsComponent.getCommentsContainer();
 
-    this._commentsConroller = renderFilmComments(commentsContainer, this._commentsModel.getComments(), this._onCommentDataChange);
+    this._commentsConroller = new CommentsController(commentsContainer, this._onCommentDataChange);
+    this._commentsConroller.render(this._commentsModel.getComments());
   }
 
   _updateComments() {
@@ -179,7 +176,7 @@ export default class MovieController {
     } else {
       this._commentsModel.addComment(newData);
     }
-    this._onFilmDataChange();
+    this._onFilmDataChange(this);
   }
 
   _onCommentChange() {

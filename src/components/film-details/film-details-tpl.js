@@ -1,4 +1,4 @@
-import {formatTime, formatDate} from "Utils/common";
+import {formatTime, formatDate} from "@utils/common";
 
 const createGenresMarkup = (genres) => {
   return genres

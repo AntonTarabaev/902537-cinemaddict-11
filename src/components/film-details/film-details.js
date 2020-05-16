@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "Components/abstract/abstract-smart-component";
+import AbstractSmartComponent from "@components/abstract/abstract-smart-component";
 import {createFilmDetailsTemplate} from "./film-details-tpl";
 
 export default class FilmDetails extends AbstractSmartComponent {

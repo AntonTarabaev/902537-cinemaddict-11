@@ -21,11 +21,11 @@ module.exports = (env) => {
     ],
     resolve: {
       alias: {
-        Utils: path.resolve(__dirname, 'src/utils/'),
-        Components: path.resolve(__dirname, 'src/components/'),
-        Controllers: path.resolve(__dirname, 'src/controllers/'),
-        Models: path.resolve(__dirname, 'src/models'),
-        MainConsts: path.resolve(__dirname, 'src/consts.js')
+        '@utils': path.resolve(__dirname, './src/utils/'),
+        '@components': path.resolve(__dirname, './src/components/'),
+        '@controllers': path.resolve(__dirname, './src/controllers/'),
+        '@models': path.resolve(__dirname, './src/models'),
+        '@consts': path.resolve(__dirname, './src/consts.js')
       }
     }
   };

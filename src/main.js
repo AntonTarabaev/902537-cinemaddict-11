@@ -1,12 +1,12 @@
-import PageController from "Controllers/page/page";
-import SiteMenuComponent from "Components/site-menu/site-menu";
-import UserRankComponent from "Components/user-rank/user-rank";
-import FilmsCountComponent from "Components/films-count/films-count";
-import MoviesModel from "Models/movies";
-import SortController from "Controllers/sort";
+import PageController from "@controllers/page/page";
+import SiteMenuComponent from "@components/site-menu/site-menu";
+import UserRankComponent from "@components/user-rank/user-rank";
+import FilmsCountComponent from "@components/films-count/films-count";
+import MoviesModel from "@models/movies";
+import SortController from "@controllers/sort";
 import {generateFilms} from "./mock/film";
-import {render, RenderPosition} from "Utils/render";
-import {FILMS_TOTAL_COUNT} from "MainConsts";
+import {render, RenderPosition} from "@utils/render";
+import {FILMS_TOTAL_COUNT} from "@consts";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);

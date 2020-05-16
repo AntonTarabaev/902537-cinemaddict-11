@@ -1,6 +1,6 @@
-import CommentsComponent from "Components/comments/comments";
-import {isCtrlEnterPressed, isAllowedCommentLength} from "Utils/common";
-import {render, RenderPosition, replace, remove} from "Utils/render";
+import CommentsComponent from "@components/comments/comments";
+import {isCtrlEnterPressed, isAllowedCommentLength} from "@utils/common";
+import {render, RenderPosition, replace, remove} from "@utils/render";
 
 export default class CommentsController {
   constructor(container, onCommentDataChange) {
@@ -15,15 +15,16 @@ export default class CommentsController {
   }
 
   render(comments) {
+    const oldComponent = this._commentsComponent;
     this._comments = comments;
+    this._renderFilmComments();
 
-    if (!this._commentsComponent) {
-      this._renderFilmComments();
+    if (!oldComponent) {
       render(this._container, this._commentsComponent, RenderPosition.BEFOREEND);
-    } else {
-      this._renderFilmComments();
-      replace(this._commentsComponent, this._oldCommentsComponent);
+      return;
     }
+
+    replace(this._commentsComponent, this._oldCommentsComponent);
   }
 
   destroy() {
@@ -49,9 +50,9 @@ export default class CommentsController {
       if (data.emoji === null) {
         this._commentsComponent.setEmojiImvalidClass();
         return;
-      } else {
-        this._commentsComponent.removeEmojiInvalidClass();
       }
+
+      this._commentsComponent.removeEmojiInvalidClass();
 
       if (!isAllowedCommentLength(data.text)) {
         this._commentsComponent.setCommentTextImvalidClass();

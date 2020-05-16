@@ -1,4 +1,4 @@
-import {AllowedCommentTextLength} from "MainConsts";
+import {AllowedCommentTextLength} from "@consts";
 import moment from "moment";
 
 export const formatTime = (durationInMinutes) => {

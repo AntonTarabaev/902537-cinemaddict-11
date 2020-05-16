@@ -1,7 +1,7 @@
-import SortComponent from "Components/sort/sort";
-import {SortType, SortTexts} from "MainConsts";
-import {getFilmsBySort} from "Utils/sort";
-import {render, RenderPosition, replace} from "Utils/render";
+import SortComponent from "@components/sort/sort";
+import {SortType, SortTexts} from "@consts";
+import {getFilmsBySort} from "@utils/sort";
+import {render, RenderPosition, replace} from "@utils/render";
 
 export default class SortController {
   constructor(container, moviesModel) {
@@ -36,9 +36,10 @@ export default class SortController {
 
     if (oldComponent) {
       replace(this._sortComponent, oldComponent);
-    } else {
-      render(container, this._sortComponent, RenderPosition.AFTERBEGIN);
+      return;
     }
+
+    render(container, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _onSortTypeChange(sortType) {

@@ -19,7 +19,7 @@ export const render = (container, component, place) => {
     case RenderPosition.AFTEREND:
       container.after(component.getElement());
       break;
-    case RenderPosition.BEFOREEND:
+    default:
       container.append(component.getElement());
       break;
   }

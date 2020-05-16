@@ -1,5 +1,5 @@
-import {getFilmsBySort} from "Utils/sort";
-import {SortType} from "MainConsts";
+import {getFilmsBySort} from "@utils/sort";
+import {SortType} from "@consts";
 
 export const createUserRankTemplate = (films) => {
   const watchedFilms = getFilmsBySort(films, SortType.HISTORY).length;

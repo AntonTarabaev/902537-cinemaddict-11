@@ -1,10 +1,10 @@
-import {formatCommentDate} from "Utils/common";
+import {formatCommentDate} from "@utils/common";
 import {encode} from "he";
 
 const createCommentsMarkup = (comments) => {
   return comments
     .map((it) => {
-      const commentText = encode(it.text instanceof Array ? it.text.join(` `) : it.text);
+      const commentText = encode(Array.isArray(it.text) ? it.text.join(` `) : it.text);
 
       return (
         `<li class="film-details__comment" data-comment-id="${it.id}">

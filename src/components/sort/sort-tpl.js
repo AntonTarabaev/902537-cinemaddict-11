@@ -1,4 +1,4 @@
-import {SortType} from "MainConsts";
+import {SortType} from "@consts";
 
 const createSortMarkup = (sort) => {
   const {name, count, isActive, text} = sort;

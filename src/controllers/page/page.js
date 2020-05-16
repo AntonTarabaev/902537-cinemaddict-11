@@ -1,26 +1,14 @@
-import FilmsListsComponent from "Components/films-list/films-lists";
-import FilmsListComponent from "Components/films-extra-list/films-list";
-import FilterComponent from "Components/filter/filter";
-import NoFilmsComponent from "Components/no-films/no-films";
-import ShowMoreButtonComponent from "Components/show-more-button/show-more-button";
-import MovieController from "Controllers/movie";
-import CommentsModel from "Models/comments";
-import {render, remove, RenderPosition} from "Utils/render";
-import {FilterType} from "MainConsts";
+import FilmsListsComponent from "@components/films-list/films-lists";
+import FilmsListComponent from "@components/films-extra-list/films-list";
+import FilterComponent from "@components/filter/filter";
+import NoFilmsComponent from "@components/no-films/no-films";
+import ShowMoreButtonComponent from "@components/show-more-button/show-more-button";
+import MovieController from "@controllers/movie";
+import CommentsModel from "@models/comments";
+import {render, remove, RenderPosition} from "@utils/render";
+import {FilterType} from "@consts";
 import {FilmSettings, filmsListName} from "./consts";
 import {getFilteredFilms} from "./utils";
-
-const renderFilmsCards = (container, films, onDataChange, onViewChange, onFilmDataChange) => {
-  return films.map((film) => {
-    const commentsModel = new CommentsModel();
-    commentsModel.setComments(film.comments);
-
-    const movieController = new MovieController(container, onDataChange, onViewChange, onFilmDataChange, commentsModel);
-    movieController.render(film);
-
-    return movieController;
-  });
-};
 
 export default class PageController {
   constructor(container, moviesModel) {
@@ -84,11 +72,26 @@ export default class PageController {
     this._showedMostCommentedMovieControllers = [];
   }
 
+  _renderFilmsCards(container, films) {
+    return films.map((film) => {
+      const commentsModel = new CommentsModel();
+      commentsModel.setComments(film.comments);
+
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._onFilmDataChange, commentsModel);
+      movieController.render(film);
+
+      return movieController;
+    });
+  }
+
   _renderFilms(films) {
+    const filmsCountToRender = this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT ? this._moviesModel.getFilms().length : this._showingFilmsCount;
+    const filteredFilms = getFilteredFilms(films, this._filterComponent.getFilterType(), 0, filmsCountToRender);
+
     render(this._filmsListsComponent.getElement(), this._mainFilmsComponent, RenderPosition.AFTERBEGIN);
     const filmsContainer = this._mainFilmsComponent.getFilmsContainer();
 
-    const newFilms = renderFilmsCards(filmsContainer, films, this._onDataChange, this._onViewChange, this._onFilmDataChange);
+    const newFilms = this._renderFilmsCards(filmsContainer, filteredFilms);
     this._showedMovieControllers = this._showedMovieControllers.concat(newFilms);
     this._showingFilmsCount = this._showedMovieControllers.length;
   }
@@ -103,7 +106,7 @@ export default class PageController {
     render(this._mainFilmsComponent.getElement(), this._topRatedFilmsComponent, RenderPosition.AFTEREND);
     const filmsContainer = this._topRatedFilmsComponent.getFilmsContainer();
 
-    const newTopRatedFilms = renderFilmsCards(filmsContainer, topRatedFilms, this._onDataChange, this._onViewChange, this._onFilmDataChange);
+    const newTopRatedFilms = this._renderFilmsCards(filmsContainer, topRatedFilms);
     this._showedTopRatedMovieControllers = this._showedTopRatedMovieControllers.concat(newTopRatedFilms);
   }
 
@@ -117,7 +120,7 @@ export default class PageController {
     render(this._filmsListsComponent.getElement(), this._mostCommentedFilmsComponent, RenderPosition.BEFOREEND);
     const filmsContainer = this._mostCommentedFilmsComponent.getFilmsContainer();
 
-    const newMostCommentedFilms = renderFilmsCards(filmsContainer, mostCommentedFilms, this._onDataChange, this._onViewChange, this._onFilmDataChange);
+    const newMostCommentedFilms = this._renderFilmsCards(filmsContainer, mostCommentedFilms);
     this._showedMostCommentedMovieControllers = this._showedMostCommentedMovieControllers.concat(newMostCommentedFilms);
   }
 

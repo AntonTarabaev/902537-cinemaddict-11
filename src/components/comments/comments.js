@@ -1,15 +1,5 @@
 import {createCommentsTemplate, createEmojiMarkup} from "./comments-tpl";
-import AbstractComponent from "Components/abstract/abstract-component";
-
-const parseFormData = (formData) => {
-  return {
-    id: String(new Date() + Math.random()),
-    text: formData.get(`comment`),
-    emoji: formData.get(`comment-emoji`),
-    author: `Anton`,
-    date: new Date(),
-  };
-};
+import AbstractComponent from "@components/abstract/abstract-component";
 
 export default class Comments extends AbstractComponent {
   constructor(comments) {
@@ -33,7 +23,7 @@ export default class Comments extends AbstractComponent {
     const form = document.querySelector(`.film-details__inner`);
     const formData = new FormData(form);
 
-    return parseFormData(formData);
+    return this.constructor._parseFormData(formData);
   }
 
   getCommentId(target) {
@@ -87,5 +77,15 @@ export default class Comments extends AbstractComponent {
     });
 
     this._deleteButtonsClickHandler = handler;
+  }
+
+  static _parseFormData(formData) {
+    return {
+      id: String(new Date() + Math.random()),
+      text: formData.get(`comment`),
+      emoji: formData.get(`comment-emoji`),
+      author: `Anton`,
+      date: new Date(),
+    };
   }
 }

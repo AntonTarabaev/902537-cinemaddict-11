@@ -1,4 +1,4 @@
-import {formatTime} from "Utils/common";
+import {formatTime} from "@utils/common";
 
 const MAX_DESCRIPTON_TEXT_LENGTH = 140;
 
