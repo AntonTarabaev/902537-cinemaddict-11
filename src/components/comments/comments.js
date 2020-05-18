@@ -1,5 +1,6 @@
 import {createCommentsTemplate, createEmojiMarkup} from "./comments-tpl";
 import AbstractComponent from "@components/abstract/abstract-component";
+import {SHAKE_ANIMATION_DURATION, DeleteButtonText} from "@consts";
 
 export default class Comments extends AbstractComponent {
   constructor(comments) {
@@ -8,9 +9,6 @@ export default class Comments extends AbstractComponent {
     this._comments = comments;
     this._emoji = null;
     this._commentText = null;
-
-    this._submitHandler = null;
-    this._deleteButtonsClickHandler = null;
 
     this._subscribeOnEvents();
   }
@@ -23,11 +21,23 @@ export default class Comments extends AbstractComponent {
     const form = document.querySelector(`.film-details__inner`);
     const formData = new FormData(form);
 
-    return this.constructor._parseFormData(formData);
+    return formData;
   }
 
   getCommentId(target) {
     return target.closest(`.film-details__comment`).dataset.commentId;
+  }
+
+  getCommentsContainer() {
+    return this.getElement().querySelector(`.film-details__comments-list`);
+  }
+
+  getCommentById(id) {
+    return this.getElement().querySelector(`[data-comment-id="${id}"]`);
+  }
+
+  setCommentsCount(count) {
+    this.getElement().querySelector(`.film-details__comments-count`).textContent = count;
   }
 
   setEmojiImvalidClass() {
@@ -38,6 +48,19 @@ export default class Comments extends AbstractComponent {
     this.getElement().querySelector(`.film-details__comment-input`).classList.add(`invalid-comment`);
   }
 
+  changeFormElementsDisabledProperty(disabled = false) {
+    const form = document.querySelector(`.film-details__inner`);
+
+    Array.from(form.elements).forEach((formElement) => {
+      formElement.disabled = disabled;
+    });
+  }
+
+  cleanForm() {
+    document.querySelector(`.film-details__inner`).reset();
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+  }
+
   removeEmojiInvalidClass() {
     this.getElement().querySelector(`.film-details__add-emoji-label`).classList.remove(`invalid-comment`);
   }
@@ -46,10 +69,27 @@ export default class Comments extends AbstractComponent {
     super.removeElement();
   }
 
-  recoveryListeners() {
-    this._subscribeOnEvents();
-    this.setDeleteButtonsClickHandler(this._deleteButtonsClickHandler);
-    this.setSubmitHandler(this._submitHandler);
+  changeCommentDeleteButtonText(id) {
+    this.getCommentById(id).querySelector(`.film-details__comment-delete`).textContent = DeleteButtonText.DELETING;
+  }
+
+  shakeComment(id) {
+    const comment = this.getCommentById(id);
+    comment.classList.add(`shake`);
+
+    setTimeout(() => {
+      comment.classList.remove(`shake`);
+      comment.querySelector(`.film-details__comment-delete`).textContent = DeleteButtonText.DELETE;
+    }, SHAKE_ANIMATION_DURATION);
+  }
+
+  shakeForm() {
+    const newCommentForm = this.getElement().querySelector(`.film-details__new-comment`);
+    newCommentForm.classList.add(`shake`);
+
+    setTimeout(() => {
+      newCommentForm.classList.remove(`shake`);
+    }, SHAKE_ANIMATION_DURATION);
   }
 
   _subscribeOnEvents() {
@@ -67,25 +107,11 @@ export default class Comments extends AbstractComponent {
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
-
-    this._submitHandler = handler;
   }
 
   setDeleteButtonsClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((it) => {
       it.addEventListener(`click`, handler);
     });
-
-    this._deleteButtonsClickHandler = handler;
-  }
-
-  static _parseFormData(formData) {
-    return {
-      id: String(new Date() + Math.random()),
-      text: formData.get(`comment`),
-      emoji: formData.get(`comment-emoji`),
-      author: `Anton`,
-      date: new Date(),
-    };
   }
 }

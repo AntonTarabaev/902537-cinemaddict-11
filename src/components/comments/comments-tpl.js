@@ -31,6 +31,24 @@ export const createEmojiMarkup = (emoji) => {
   );
 };
 
+export const createCommentTemplate = (comment) => {
+  return (
+    `<li class="film-details__comment" data-comment-id="${comment.id}">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${encode(comment.text)}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${comment.author}</span>
+          <span class="film-details__comment-day">${formatCommentDate(comment.date)}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`
+  );
+};
+
 export const createCommentsTemplate = (comments) => {
   const commentsMarkup = createCommentsMarkup(comments);
 

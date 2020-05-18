@@ -1,18 +1,18 @@
-import FilmsListsComponent from "@components/films-list/films-lists";
-import FilmsListComponent from "@components/films-extra-list/films-list";
+import FilmsListsComponent from "@components/films-lists/films-lists";
+import FilmsListComponent from "@components/films-list/films-list";
 import FilterComponent from "@components/filter/filter";
 import NoFilmsComponent from "@components/no-films/no-films";
 import ShowMoreButtonComponent from "@components/show-more-button/show-more-button";
 import MovieController from "@controllers/movie";
-import CommentsModel from "@models/comments";
 import {render, remove, RenderPosition} from "@utils/render";
 import {FilterType} from "@consts";
 import {FilmSettings, filmsListName} from "./consts";
 import {getFilteredFilms} from "./utils";
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
+    this._api = api;
     this._moviesModel = moviesModel;
 
     this._showedMovieControllers = [];
@@ -29,7 +29,6 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
-    this._onFilmDataChange = this._onFilmDataChange.bind(this);
     this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
@@ -49,12 +48,26 @@ export default class PageController {
     }
 
     render(this._container, this._filmsListsComponent, RenderPosition.BEFOREEND);
+    render(this._filmsListsComponent.getElement(), this._mainFilmsComponent, RenderPosition.AFTERBEGIN);
+
 
     this._renderFilms(films.slice(0, this._showingFilmsCount));
     this._renderTopRatedFilms(films);
     this._renderMostCommentedFilms(films);
 
     this._renderShowMoreButton();
+  }
+
+  hide() {
+    this._filterComponent.hide();
+    this._filmsListsComponent.hide();
+    this._filterComponent.setDefaultView();
+    this._updateMainFilms(FilmSettings.SHOWING_ON_START_COUNT);
+  }
+
+  show() {
+    this._filterComponent.show();
+    this._filmsListsComponent.show();
   }
 
   _removeFilms() {
@@ -74,10 +87,7 @@ export default class PageController {
 
   _renderFilmsCards(container, films) {
     return films.map((film) => {
-      const commentsModel = new CommentsModel();
-      commentsModel.setComments(film.comments);
-
-      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._onFilmDataChange, commentsModel);
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._api);
       movieController.render(film);
 
       return movieController;
@@ -88,7 +98,6 @@ export default class PageController {
     const filmsCountToRender = this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT ? this._moviesModel.getFilms().length : this._showingFilmsCount;
     const filteredFilms = getFilteredFilms(films, this._filterComponent.getFilterType(), 0, filmsCountToRender);
 
-    render(this._filmsListsComponent.getElement(), this._mainFilmsComponent, RenderPosition.AFTERBEGIN);
     const filmsContainer = this._mainFilmsComponent.getFilmsContainer();
 
     const newFilms = this._renderFilmsCards(filmsContainer, filteredFilms);
@@ -159,38 +168,43 @@ export default class PageController {
     this._showedTopRatedMovieControllers.forEach((it) => it.setDefaultView());
   }
 
-  _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
-    if (isSuccess) {
-      movieController.render(newData);
-    }
-  }
+  _onDataChange(movieController, oldData, newData, target) {
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._moviesModel.updateFilm(oldData.id, filmModel);
+        if (isSuccess) {
+          movieController.render(filmModel);
+          movieController.updateControlClass(target);
 
-  _onFilmDataChange(movieController) {
-    if (this._showedTopRatedMovieControllers.indexOf(movieController) !== -1) {
-      if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
-        this._updateMainFilms(this._moviesModel.getFilms().length);
-      } else {
-        this._updateMainFilms(this._showingFilmsCount);
-      }
-      this._updateMostCommentedFilms();
-    } else if (this._showedMostCommentedMovieControllers.indexOf(movieController) !== -1) {
-      if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
-        this._updateMainFilms(this._moviesModel.getFilms().length);
-      } else {
-        this._updateMainFilms(this._showingFilmsCount);
-      }
-      this._updateTopRatedFilms();
-    } else {
-      this._updateTopRatedFilms();
-      this._updateMostCommentedFilms();
-    }
+          if (this._showedTopRatedMovieControllers.indexOf(movieController) !== -1) {
+            if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
+              this._updateMainFilms(this._moviesModel.getFilms().length);
+            } else {
+              this._updateMainFilms(this._showingFilmsCount);
+            }
+            this._updateMostCommentedFilms();
+          } else if (this._showedMostCommentedMovieControllers.indexOf(movieController) !== -1) {
+            if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
+              this._updateMainFilms(this._moviesModel.getFilms().length);
+            } else {
+              this._updateMainFilms(this._showingFilmsCount);
+            }
+            this._updateTopRatedFilms();
+          } else {
+            this._updateTopRatedFilms();
+            this._updateMostCommentedFilms();
+          }
+        }
+      })
+      .catch(() => {
+        movieController.shake();
+      });
   }
 
   _onSortTypeChange() {
-    this._updateMainFilms(FilmSettings.SHOWING_ON_START_COUNT);
-
     this._filterComponent.setDefaultView();
+
+    this._updateMainFilms(FilmSettings.SHOWING_ON_START_COUNT);
   }
 
   _onFilterTypeChange(filterType) {

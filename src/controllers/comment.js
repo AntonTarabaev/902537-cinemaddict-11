@@ -1,4 +1,6 @@
 import CommentsComponent from "@components/comments/comments";
+import CommentComponent from "@components/comments/comment";
+import CommentModel from "@models/comment";
 import {isCtrlEnterPressed, isAllowedCommentLength} from "@utils/common";
 import {render, RenderPosition, replace, remove} from "@utils/render";
 
@@ -9,6 +11,7 @@ export default class CommentsController {
     this._onCommentDataChange = onCommentDataChange;
 
     this._commentsComponent = null;
+    this._commentComponent = null;
     this._oldCommentsComponent = null;
 
     this._onCtrlEnterKeyDown = this._onCtrlEnterKeyDown.bind(this);
@@ -25,6 +28,46 @@ export default class CommentsController {
     }
 
     replace(this._commentsComponent, this._oldCommentsComponent);
+  }
+
+  renderFirstComment(comments) {
+    this._comments = comments;
+    this._commentComponent = new CommentComponent(this._comments[0]);
+
+    this._commentComponent.setDeleteButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onCommentDataChange(this._commentsComponent.getCommentId(evt.target), null);
+    });
+
+    render(this._commentsComponent.getCommentsContainer(), this._commentComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  removeCommentById(commentId) {
+    this._commentsComponent.getCommentById(commentId).remove();
+  }
+
+  updateCommentsCount(count) {
+    this._commentsComponent.setCommentsCount(count);
+  }
+
+  changeFormElementsDisabledProperty(disabled = false) {
+    this._commentsComponent.changeFormElementsDisabledProperty(disabled);
+  }
+
+  cleanForm() {
+    this._commentsComponent.cleanForm();
+  }
+
+  changeCommentDeleteButtonText(id) {
+    this._commentsComponent.changeCommentDeleteButtonText(id);
+  }
+
+  shakeComment(id) {
+    this._commentsComponent.shakeComment(id);
+  }
+
+  shakeForm() {
+    this._commentsComponent.shakeForm();
   }
 
   destroy() {
@@ -45,7 +88,7 @@ export default class CommentsController {
 
   _onCtrlEnterKeyDown(evt) {
     if (isCtrlEnterPressed(evt)) {
-      const data = this._commentsComponent.getData();
+      const data = this.constructor._parseFormData(this._commentsComponent.getData());
 
       if (data.emoji === null) {
         this._commentsComponent.setEmojiImvalidClass();
@@ -61,5 +104,13 @@ export default class CommentsController {
 
       this._onCommentDataChange(null, data);
     }
+  }
+
+  static _parseFormData(formData) {
+    return new CommentModel({
+      'comment': formData.get(`comment`),
+      'emotion': formData.get(`comment-emoji`),
+      'date': new Date(),
+    });
   }
 }

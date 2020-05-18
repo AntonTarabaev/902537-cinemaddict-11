@@ -32,8 +32,6 @@ export default class Sort extends AbstractComponent {
         return;
       }
 
-      this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
-      evt.target.classList.add(`main-navigation__item--active`);
       this._activeSortType = sortType;
 
       handler(this._activeSortType);

@@ -2,15 +2,18 @@ import {getFilmsBySort} from "@utils/sort";
 import {SortType} from "@consts";
 
 export const createUserRankTemplate = (films) => {
-  const watchedFilms = getFilmsBySort(films, SortType.HISTORY).length;
   let userRank = ``;
 
-  if (watchedFilms > 20) {
-    userRank = `Movie Buff`;
-  } else if (watchedFilms > 10) {
-    userRank = `Fan`;
-  } else if (watchedFilms > 0) {
-    userRank = `Novice`;
+  if (films) {
+    const watchedFilms = getFilmsBySort(films, SortType.HISTORY).length;
+
+    if (watchedFilms > 20) {
+      userRank = `Movie Buff`;
+    } else if (watchedFilms > 10) {
+      userRank = `Fan`;
+    } else if (watchedFilms > 0) {
+      userRank = `Novice`;
+    }
   }
 
   return (
