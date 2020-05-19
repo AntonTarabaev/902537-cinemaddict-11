@@ -1,17 +1,9 @@
-import {getFilmsBySort} from "Utils/sort";
-import {SortType} from "MainConsts";
+import {getFilmsBySort} from "@utils/sort";
+import {getUserRank} from "@utils/common";
+import {SortType} from "@consts";
 
 export const createUserRankTemplate = (films) => {
-  const watchedFilms = getFilmsBySort(films, SortType.HISTORY).length;
-  let userRank = ``;
-
-  if (watchedFilms > 20) {
-    userRank = `Movie Buff`;
-  } else if (watchedFilms > 10) {
-    userRank = `Fan`;
-  } else if (watchedFilms > 0) {
-    userRank = `Novice`;
-  }
+  const userRank = getUserRank(films ? getFilmsBySort(films, SortType.HISTORY).length : 0);
 
   return (
     `<section class="header__profile profile">

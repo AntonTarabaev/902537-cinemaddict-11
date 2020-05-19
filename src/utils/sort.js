@@ -1,4 +1,4 @@
-import {SortType} from "MainConsts";
+import {SortType} from "@consts";
 
 const getWatchedFilms = (films) => {
   return films.filter((film) => film.isWatched);
@@ -14,15 +14,13 @@ const getFavoriteFilms = (films) => {
 
 export const getFilmsBySort = (films, sortType) => {
   switch (sortType) {
-    case SortType.ALL:
-      return films;
     case SortType.FAVORITES:
       return getFavoriteFilms(films);
     case SortType.HISTORY:
       return getWatchedFilms(films);
     case SortType.WATCHLIST:
       return getFilmsInWatchlist(films);
+    default:
+      return films;
   }
-
-  return films;
 };

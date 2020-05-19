@@ -1,15 +1,11 @@
-import FilmCardComponent from "Components/film-card/film-card";
-import FilmDetailsComponent from "Components/film-details/film-details";
-import CommentsController from "Controllers/comment";
-import {isEscPressed} from "Utils/common";
-import {render, RenderPosition, replace, remove} from "Utils/render";
-
-const renderFilmComments = (container, film, onCommentDataChange) => {
-  const commentsController = new CommentsController(container, onCommentDataChange);
-  commentsController.render(film);
-
-  return commentsController;
-};
+import FilmCardComponent from "@components/film-card/film-card";
+import FilmDetailsComponent from "@components/film-details/film-details";
+import CommentsController from "@controllers/comment";
+import CommentsModel from "@models/comments";
+import MovieModel from "@models/movie";
+import {isEscPressed} from "@utils/common";
+import {render, RenderPosition, replace, remove} from "@utils/render";
+import {FilmButton} from "@consts";
 
 const State = {
   OPENED: `opened`,
@@ -17,15 +13,15 @@ const State = {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, onFilmDataChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
+    this._api = api;
 
-    this._commentsModel = commentsModel;
+    this._commentsModel = new CommentsModel();
     this._commentsConroller = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._onFilmDataChange = onFilmDataChange;
     this._state = State.CLOSED;
 
     this._filmCardComponent = null;
@@ -47,7 +43,10 @@ export default class MovieController {
       this._renderFilmDetails();
 
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
-    } else if (this._state === State.CLOSED) {
+      return;
+    }
+
+    if (this._state === State.CLOSED) {
       this._renderFilmDetails();
       replace(this._filmDetailsComponent, this._oldFilmDetailsComponent);
     } else {
@@ -68,19 +67,38 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
+  updateControlClass(target) {
+    if (this._state === State.CLOSED) {
+      this._filmCardComponent.changeButtonActiveClass(target);
+    } else {
+      this._filmDetailsComponent.changeButtonActiveClass(target);
+    }
+  }
+
+  shake() {
+    if (this._state === State.CLOSED) {
+      this._filmCardComponent.shake();
+    } else {
+      this._filmDetailsComponent.shake();
+    }
+  }
+
   _renderFilmDetails() {
     this._oldFilmDetailsComponent = this._filmDetailsComponent;
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
 
-    this._filmDetailsComponent.setWatchlistButtonClickHandler(() => {
+    this._filmDetailsComponent.setWatchlistButtonClickHandler((evt) => {
+      evt.preventDefault();
       this._changeFilmWhatchlistPropery(this._film);
     });
 
-    this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
+    this._filmDetailsComponent.setWatchedButtonClickHandler((evt) => {
+      evt.preventDefault();
       this._changeFilmWhatchedtPropery(this._film);
     });
 
-    this._filmDetailsComponent.setFavoriteButtonClickHandler(() => {
+    this._filmDetailsComponent.setFavoriteButtonClickHandler((evt) => {
+      evt.preventDefault();
       this._changeFilmFavoritePropery(this._film);
     });
 
@@ -126,6 +144,7 @@ export default class MovieController {
     this._filmDetailsComponent.reset();
     this._filmDetailsComponent.getElement().remove();
     this._state = State.CLOSED;
+    this._removeComments();
   }
 
   _removeComments() {
@@ -136,54 +155,94 @@ export default class MovieController {
   _renderComments() {
     const commentsContainer = this._filmDetailsComponent.getCommentsContainer();
 
-    this._commentsConroller = renderFilmComments(commentsContainer, this._commentsModel.getComments(), this._onCommentDataChange);
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+        this._commentsConroller = new CommentsController(commentsContainer, this._onCommentDataChange);
+        this._commentsConroller.render(this._commentsModel.getComments());
+      });
   }
 
-  _updateComments() {
-    this._removeComments();
-    this._renderComments();
+  _addNewComment() {
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+        this._commentsConroller.renderFirstComment(this._commentsModel.getComments());
+        this._commentsConroller.updateCommentsCount(comments.length);
+      });
   }
 
   _changeFilmWhatchlistPropery(film) {
-    this._onDataChange(this, film, Object.assign({}, film, {
-      isInWatchlist: !film.isInWatchlist,
-    }));
-    this._onFilmDataChange(this);
+    const newFilm = MovieModel.clone(film);
+    const target = FilmButton.WATCHLIST;
+
+    newFilm.isInWatchlist = !newFilm.isInWatchlist;
+    if (newFilm.isInWatchlist) {
+      newFilm.watchingDate = new Date();
+    } else {
+      newFilm.watchingDate = new Date(null);
+    }
+
+    this._onDataChange(this, film, newFilm, target);
   }
 
   _changeFilmWhatchedtPropery(film) {
-    this._onDataChange(this, film, Object.assign({}, film, {
-      isWatched: !film.isWatched,
-    }));
-    this._onFilmDataChange(this);
+    const newFilm = MovieModel.clone(film);
+    const target = FilmButton.HISTORY;
+
+    newFilm.isWatched = !newFilm.isWatched;
+
+    this._onDataChange(this, film, newFilm, target);
   }
 
   _changeFilmFavoritePropery(film) {
-    this._onDataChange(this, film, Object.assign({}, film, {
-      isFavorite: !film.isFavorite,
-    }));
-    this._onFilmDataChange(this);
+    const newFilm = MovieModel.clone(film);
+    const target = FilmButton.FAVORITES;
+
+    newFilm.isFavorite = !newFilm.isFavorite;
+
+    this._onDataChange(this, film, newFilm, target);
   }
 
   _changeFilmComments(film) {
-    this._onDataChange(this, film, Object.assign({}, film, {
-      commentsCount: this._commentsModel.getComments().length,
-      comments: this._commentsModel.getComments(),
-    }));
-    this._onFilmDataChange(this);
+    const newFilm = MovieModel.clone(film);
+    newFilm.commentsCount = this._commentsModel.getComments().length;
+
+    this._onDataChange(this, film, newFilm);
   }
 
   _onCommentDataChange(oldDataId, newData) {
+    this._commentsConroller.changeFormElementsDisabledProperty(true);
+    this._commentsConroller.changeCommentDeleteButtonText(oldDataId);
     if (newData === null) {
-      this._commentsModel.removeComment(oldDataId);
+      this._api.deleteComment(oldDataId)
+        .then(() => {
+          this._commentsModel.removeComment(oldDataId);
+          this._commentsConroller.removeCommentById(oldDataId);
+          this._commentsConroller.updateCommentsCount(this._commentsModel.getComments().length);
+          this._commentsConroller.changeFormElementsDisabledProperty(false);
+        })
+        .catch(() => {
+          this._commentsConroller.shakeComment(oldDataId);
+          this._commentsConroller.changeFormElementsDisabledProperty(false);
+        });
     } else {
-      this._commentsModel.addComment(newData);
+      this._commentsConroller.changeFormElementsDisabledProperty(true);
+      this._api.createComment(this._film.id, newData)
+        .then(() => {
+          this._onCommentChange();
+          this._addNewComment();
+          this._commentsConroller.cleanForm();
+          this._commentsConroller.changeFormElementsDisabledProperty(false);
+        })
+        .catch(() => {
+          this._commentsConroller.shakeForm();
+          this._commentsConroller.changeFormElementsDisabledProperty(false);
+        });
     }
-    this._onFilmDataChange();
   }
 
   _onCommentChange() {
-    this._updateComments();
     this._changeFilmComments(this._film);
   }
 

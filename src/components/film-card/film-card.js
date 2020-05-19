@@ -1,5 +1,6 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createFilmCardTemplate} from "./film-card-tpl";
+import {FilmButton, SHAKE_ANIMATION_DURATION} from "@consts";
 
 const FILM_CARD_ELEMENTS = [
   `film-card__title`,
@@ -16,6 +17,32 @@ export default class FilmCard extends AbstractComponent {
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
+  }
+
+  shake() {
+    this.getElement().classList.add(`shake`);
+
+    setTimeout(() => {
+      this.getElement().classList.remove(`shake`);
+    }, SHAKE_ANIMATION_DURATION);
+  }
+
+  changeButtonActiveClass(target) {
+    switch (target) {
+      case FilmButton.WATCHLIST:
+        this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`));
+        break;
+      case FilmButton.HISTORY:
+        this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`));
+        break;
+      case FilmButton.FAVORITES:
+        this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--favorite`));
+        break;
+    }
+  }
+
+  _changeTargetActiveClass(target) {
+    target.classList.toggle(`film-card__controls-item--active`);
   }
 
   setElementsClickHandler(handler) {
@@ -47,7 +74,6 @@ export default class FilmCard extends AbstractComponent {
 
   _onBtnClick(evt, handler) {
     evt.preventDefault();
-    evt.target.classList.toggle(`film-card__controls-item--active`);
     handler();
   }
 }

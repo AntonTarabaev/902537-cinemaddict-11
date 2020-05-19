@@ -1,5 +1,6 @@
-import AbstractSmartComponent from "Components/abstract/abstract-smart-component";
+import AbstractSmartComponent from "@components/abstract/abstract-smart-component";
 import {createFilmDetailsTemplate} from "./film-details-tpl";
+import {FilmButton, SHAKE_ANIMATION_DURATION} from "@consts";
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
@@ -47,6 +48,32 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
     this.setWatchedButtonClickHandler(this._watchedButtonClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+  }
+
+  shake() {
+    this.getElement().classList.add(`shake`);
+
+    setTimeout(() => {
+      this.getElement().classList.remove(`shake`);
+    }, SHAKE_ANIMATION_DURATION);
+  }
+
+  changeButtonActiveClass(target) {
+    switch (target) {
+      case FilmButton.WATCHLIST:
+        this._changeTargetActiveClass(this.getElement().querySelector(`#watchlist`));
+        break;
+      case FilmButton.HISTORY:
+        this._changeTargetActiveClass(this.getElement().querySelector(`#watched`));
+        break;
+      case FilmButton.FAVORITES:
+        this._changeTargetActiveClass(this.getElement().querySelector(`#favorite`));
+        break;
+    }
+  }
+
+  _changeTargetActiveClass(target) {
+    target.checked = !target.checked;
   }
 
   setCloseButtonClickHandler(handler) {

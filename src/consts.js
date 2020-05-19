@@ -1,4 +1,6 @@
-export const FILMS_TOTAL_COUNT = 12;
+export const HIDDEN_CLASS = `visually-hidden`;
+
+export const SHAKE_ANIMATION_DURATION = 600;
 
 export const EMOJI = {
   ANGRY: `angry`,
@@ -28,7 +30,51 @@ export const SortTexts = new Map([
   [`favorites`, `Favorites`],
 ]);
 
+export const FilmButton = {
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
+export const MenuItem = {
+  STATISTICS: `stats`,
+  REST: `rest`,
+};
+
 export const AllowedCommentTextLength = {
   MIN: 5,
   MAX: 150,
+};
+
+export const DeleteButtonText = {
+  DELETE: `Delete`,
+  DELETING: `Deleting...`,
+};
+
+export const StatisticFilter = {
+  ALL_TIME: {
+    INPUT: `all-time`,
+    LABEL: `All time`,
+    DAYS: 0,
+  },
+  TODAY: {
+    INPUT: `today`,
+    LABEL: `Today`,
+    DAYS: 1,
+  },
+  WEEK: {
+    INPUT: `week`,
+    LABEL: `Week`,
+    DAYS: 7,
+  },
+  MONTH: {
+    INPUT: `month`,
+    LABEL: `Month`,
+    DAYS: 30,
+  },
+  YEAR: {
+    INPUT: `year`,
+    LABEL: `Year`,
+    DAYS: 365,
+  },
 };

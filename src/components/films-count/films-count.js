@@ -1,4 +1,4 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createFilmsCountTemplate} from "./films-count-tpl";
 
 export default class FilmsCount extends AbstractComponent {

@@ -1,6 +1,6 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createSortTemplate} from "./sort-tpl";
-import {SortType} from "MainConsts";
+import {SortType} from "@consts";
 
 export default class Sort extends AbstractComponent {
   constructor(sort) {
@@ -22,7 +22,7 @@ export default class Sort extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
-      if (evt.target.tagName !== `A`) {
+      if (!evt.target.classList.contains(`main-navigation__item`)) {
         return;
       }
 
@@ -32,8 +32,6 @@ export default class Sort extends AbstractComponent {
         return;
       }
 
-      this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
-      evt.target.classList.add(`main-navigation__item--active`);
       this._activeSortType = sortType;
 
       handler(this._activeSortType);

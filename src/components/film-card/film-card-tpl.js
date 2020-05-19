@@ -1,4 +1,4 @@
-import {formatTime} from "Utils/common";
+import {formatTime} from "@utils/common";
 
 const MAX_DESCRIPTON_TEXT_LENGTH = 140;
 
@@ -12,13 +12,13 @@ export const createFilmCardTemplate = (film) => {
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${name}</h3>
-      <p class="film-card__rating">${rating}</p>
+      <p class="film-card__rating">${rating.toFixed(1)}</p>
       <p class="film-card__info">
         <span class="film-card__year">${releaseDate.getFullYear()}</span>
         <span class="film-card__duration">${formatTime(duration)}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
-      <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+      <img src="./${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${descriptionText}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">

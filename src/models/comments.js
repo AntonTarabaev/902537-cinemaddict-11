@@ -6,8 +6,7 @@ export default class Comments {
   }
 
   setComments(comments) {
-    this._comments = Array.from(comments);
-    this._callHandlers(this._dataChangeHandlers);
+    this._comments = Array.from(comments).sort((a, b) => b.date - a.date);
   }
 
   getComments() {

@@ -1,6 +1,6 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createFilterTemplate} from "./filter-tpl";
-import {FilterType} from "MainConsts";
+import {FilterType} from "@consts";
 
 export default class Filter extends AbstractComponent {
   constructor() {
@@ -29,7 +29,7 @@ export default class Filter extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
-      if (evt.target.tagName !== `A`) {
+      if (!evt.target.classList.contains(`sort__button`)) {
         return;
       }
 

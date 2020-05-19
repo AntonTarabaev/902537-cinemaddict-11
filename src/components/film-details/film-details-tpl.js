@@ -1,4 +1,4 @@
-import {formatTime, formatDate} from "Utils/common";
+import {formatTime, formatDate} from "@utils/common";
 
 const createGenresMarkup = (genres) => {
   return genres
@@ -27,9 +27,9 @@ export const createFilmDetailsTemplate = (film, options = {}) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="./${poster}" alt="">
 
-              <p class="film-details__age">${contentRating}</p>
+              <p class="film-details__age">${contentRating}+</p>
             </div>
 
             <div class="film-details__info">
@@ -40,7 +40,7 @@ export const createFilmDetailsTemplate = (film, options = {}) => {
                 </div>
 
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${rating}</p>
+                  <p class="film-details__total-rating">${rating.toFixed(1)}</p>
                 </div>
               </div>
 
@@ -49,10 +49,12 @@ export const createFilmDetailsTemplate = (film, options = {}) => {
                   <td class="film-details__term">Director</td>
                   <td class="film-details__cell">${director}</td>
                 </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${writers.join(`, `)}</td>
-                </tr>
+    ${writers.length > 0 ?
+      `<tr class="film-details__row">
+        <td class="film-details__term">Writer${writers.length > 1 ? `s` : ``}</td>
+        <td class="film-details__cell">${writers.join(`, `)}</td>
+      </tr>` : ``
+    }
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
                   <td class="film-details__cell">${actors.join(`, `)}</td>

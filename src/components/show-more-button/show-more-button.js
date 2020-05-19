@@ -1,4 +1,4 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createShowMoreButtonTemplate} from "./show-more-button-tpl";
 
 export default class ShowMoreButton extends AbstractComponent {

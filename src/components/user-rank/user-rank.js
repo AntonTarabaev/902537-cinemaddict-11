@@ -1,4 +1,4 @@
-import AbstractComponent from "Components/abstract/abstract-component";
+import AbstractComponent from "@components/abstract/abstract-component";
 import {createUserRankTemplate} from "./user-rank-tpl";
 
 export default class UserRank extends AbstractComponent {

@@ -1,10 +1,10 @@
-import {formatCommentDate} from "Utils/common";
+import {formatCommentDate} from "@utils/common";
 import {encode} from "he";
 
 const createCommentsMarkup = (comments) => {
   return comments
     .map((it) => {
-      const commentText = encode(it.text instanceof Array ? it.text.join(` `) : it.text);
+      const commentText = encode(Array.isArray(it.text) ? it.text.join(` `) : it.text);
 
       return (
         `<li class="film-details__comment" data-comment-id="${it.id}">
@@ -28,6 +28,24 @@ const createCommentsMarkup = (comments) => {
 export const createEmojiMarkup = (emoji) => {
   return (
     `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`
+  );
+};
+
+export const createCommentTemplate = (comment) => {
+  return (
+    `<li class="film-details__comment" data-comment-id="${comment.id}">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${encode(comment.text)}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${comment.author}</span>
+          <span class="film-details__comment-day">${formatCommentDate(comment.date)}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`
   );
 };
 
