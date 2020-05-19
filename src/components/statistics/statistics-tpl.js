@@ -1,5 +1,5 @@
 import {getHours, getMinutes} from "@utils/common";
-import {StatisticFilter} from "@consts";
+import {StatisticFilters} from "@consts";
 
 const createStatisticFilter = (input, label, currentFilter) => {
   const checkedProperty = input === currentFilter ? `checked` : ``;
@@ -10,7 +10,7 @@ const createStatisticFilter = (input, label, currentFilter) => {
   );
 };
 
-const createStatisticFilters = (currentFilter) => Object.values(StatisticFilter).map((it) => createStatisticFilter(it.INPUT, it.LABEL, currentFilter)).join(`\n`);
+const createStatisticFilters = (currentFilter) => Object.values(StatisticFilters).map((it) => createStatisticFilter(it.INPUT, it.LABEL, currentFilter)).join(`\n`);
 
 export const createStatisticsTemplate = ({rank, count, duration, topGenre}, currentFilter) => {
   return (

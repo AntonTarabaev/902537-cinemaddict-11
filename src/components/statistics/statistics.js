@@ -2,7 +2,7 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "@components/abstract/abstract-smart-component";
 import {createStatisticsTemplate} from "./statistics-tpl";
-import {StatisticFilter} from "../../consts";
+import {StatisticFilters} from "../../consts";
 
 export default class Statistics extends AbstractSmartComponent {
   constructor(moviesModel) {
@@ -10,7 +10,7 @@ export default class Statistics extends AbstractSmartComponent {
 
     this._moviesModel = moviesModel;
 
-    this._currentFilter = StatisticFilter.ALL_TIME.INPUT;
+    this._currentFilter = StatisticFilters.ALL_TIME.INPUT;
     this._period = 0;
     this._chart = null;
     this._chartData = [];
@@ -23,7 +23,8 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   show() {
-    this._currentFilter = StatisticFilter.ALL_TIME.INPUT;
+    this._currentFilter = StatisticFilters.ALL_TIME.INPUT;
+    this._getFilterPeriod();
     this.rerender();
 
     super.show();
@@ -41,7 +42,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getFilterPeriod() {
-    this._period = Object.values(StatisticFilter)[Object.values(StatisticFilter).findIndex((it) => it.INPUT === this._currentFilter)].DAYS;
+    this._period = Object.values(StatisticFilters)[Object.values(StatisticFilters).findIndex((it) => it.INPUT === this._currentFilter)].DAYS;
   }
 
   _setChartData() {
@@ -67,6 +68,7 @@ export default class Statistics extends AbstractSmartComponent {
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`,
+          barThickness: 24,
         }]
       },
       options: {
@@ -92,7 +94,6 @@ export default class Statistics extends AbstractSmartComponent {
               display: false,
               drawBorder: false,
             },
-            barThickness: 24,
           }],
           xAxes: [{
             ticks: {

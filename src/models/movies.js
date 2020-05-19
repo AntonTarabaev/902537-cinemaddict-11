@@ -1,4 +1,4 @@
-import {SortType} from "@consts";
+import {SortTypes} from "@consts";
 import {getWatchedFilmsByPeriod} from "@utils/common";
 import {getFilmsBySort} from "@utils/sort";
 import {getUserRank} from "@utils/common";
@@ -6,7 +6,7 @@ import {getUserRank} from "@utils/common";
 export default class Movies {
   constructor() {
     this._films = [];
-    this._activeSortType = SortType.ALL;
+    this._activeSortType = SortTypes.ALL;
 
     this._dataChangeHandlers = [];
     this._sortChangeHandlers = [];

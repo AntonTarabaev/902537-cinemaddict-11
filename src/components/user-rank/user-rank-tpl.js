@@ -1,9 +1,9 @@
 import {getFilmsBySort} from "@utils/sort";
 import {getUserRank} from "@utils/common";
-import {SortType} from "@consts";
+import {SortTypes} from "@consts";
 
 export const createUserRankTemplate = (films) => {
-  const userRank = getUserRank(films ? getFilmsBySort(films, SortType.HISTORY).length : 0);
+  const userRank = getUserRank(films ? getFilmsBySort(films, SortTypes.HISTORY).length : 0);
 
   return (
     `<section class="header__profile profile">

@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "@components/abstract/abstract-smart-component";
 import {createFilmDetailsTemplate} from "./film-details-tpl";
-import {FilmButton, SHAKE_ANIMATION_DURATION} from "@consts";
+import {FilmButtons, SHAKE_ANIMATION_DURATION} from "@consts";
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
@@ -60,13 +60,13 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   changeButtonActiveClass(target) {
     switch (target) {
-      case FilmButton.WATCHLIST:
+      case FilmButtons.WATCHLIST:
         this._changeTargetActiveClass(this.getElement().querySelector(`#watchlist`));
         break;
-      case FilmButton.HISTORY:
+      case FilmButtons.HISTORY:
         this._changeTargetActiveClass(this.getElement().querySelector(`#watched`));
         break;
-      case FilmButton.FAVORITES:
+      case FilmButtons.FAVORITES:
         this._changeTargetActiveClass(this.getElement().querySelector(`#favorite`));
         break;
     }

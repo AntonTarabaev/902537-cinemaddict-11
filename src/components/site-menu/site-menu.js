@@ -1,6 +1,6 @@
 import AbstractComponent from "@components/abstract/abstract-component";
 import {createSiteMenuTemplate} from "./site-menu-tpl";
-import {MenuItem} from "../../consts";
+import {MenuItems} from "../../consts";
 
 export default class SiteMenu extends AbstractComponent {
   getTemplate() {
@@ -18,29 +18,30 @@ export default class SiteMenu extends AbstractComponent {
         return;
       }
 
-      let menuItem = MenuItem.REST;
+      let menuItem = MenuItems.REST;
 
       if (evt.target.classList.contains(`main-navigation__additional`)) {
-        menuItem = MenuItem.STATISTICS;
+        menuItem = MenuItems.STATISTICS;
 
         evt.target.classList.add(`main-navigation__additional--active`);
         this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
-      } else {
-        const statisticsActiveElement = this.getElement().querySelector(`.main-navigation__additional--active`);
-        const menuActiveElement = this.getElement().querySelector(`.main-navigation__item--active`);
-        menuItem = MenuItem.REST;
+        handler(menuItem);
 
-        if (statisticsActiveElement) {
-          statisticsActiveElement.classList.remove(`main-navigation__additional--active`);
-        }
+        return;
+      }
+      const statisticsActiveElement = this.getElement().querySelector(`.main-navigation__additional--active`);
+      const menuActiveElement = this.getElement().querySelector(`.main-navigation__item--active`);
+      menuItem = MenuItems.REST;
 
-        if (menuActiveElement) {
-          menuActiveElement.classList.remove(`main-navigation__item--active`);
-        }
-
-        evt.target.classList.add(`main-navigation__item--active`);
+      if (statisticsActiveElement) {
+        statisticsActiveElement.classList.remove(`main-navigation__additional--active`);
       }
 
+      if (menuActiveElement) {
+        menuActiveElement.classList.remove(`main-navigation__item--active`);
+      }
+
+      evt.target.classList.add(`main-navigation__item--active`);
       handler(menuItem);
     });
   }

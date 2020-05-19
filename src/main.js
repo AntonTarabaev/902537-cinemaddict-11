@@ -7,12 +7,10 @@ import StatisticsComponent from "@components/statistics/statistics";
 import FilterComponent from "@components/filter/filter";
 import LoaderComponent from "@components/loader/loader";
 import MoviesModel from "@models/movies";
+import Movie from "@models/movie";
 import SortController from "@controllers/sort";
 import {render, remove, RenderPosition} from "@utils/render";
-import {MenuItem} from "@consts";
-
-const AUTHORIZATION = `Basic f1hjkS5sdfgsdfHJdjsk=`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+import {MenuItems, AUTHORIZATION, END_POINT} from "@consts";
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
@@ -41,7 +39,7 @@ statisticsComponent.hide();
 
 siteMenuComponent.setOnChange((menuItem) => {
   switch (menuItem) {
-    case MenuItem.STATISTICS:
+    case MenuItems.STATISTICS:
       pageController.hide();
       statisticsComponent.show();
       break;
@@ -53,6 +51,7 @@ siteMenuComponent.setOnChange((menuItem) => {
 });
 
 api.getFilms()
+  .then(Movie.parseFilms)
   .then((films) => {
     moviesModel.setFilms(films);
     remove(emptyUserRankComponent);
@@ -62,4 +61,7 @@ api.getFilms()
     render(siteHeaderElement, new UserRankComponent(films), RenderPosition.BEFOREEND);
     pageController.render();
     render(footerStatisticsElement, new FilmsCountComponent(films.length), RenderPosition.BEFOREEND);
+  })
+  .catch(() => {
+    loaderComponent.renderLoaderError();
   });

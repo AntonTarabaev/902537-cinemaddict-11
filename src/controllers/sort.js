@@ -1,5 +1,5 @@
 import SortComponent from "@components/sort/sort";
-import {SortType, SortTexts} from "@consts";
+import {SortTypes, SortTexts} from "@consts";
 import {getFilmsBySort} from "@utils/sort";
 import {render, RenderPosition, replace} from "@utils/render";
 
@@ -8,7 +8,7 @@ export default class SortController {
     this._container = container;
     this._moviesModel = moviesModel;
 
-    this._activeSortType = SortType.ALL;
+    this._activeSortType = SortTypes.ALL;
     this._sortComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -20,7 +20,7 @@ export default class SortController {
   render() {
     const container = this._container;
     const allFilms = this._moviesModel.getFilmsAll();
-    const sort = Object.values(SortType).map((sortType) => {
+    const sort = Object.values(SortTypes).map((sortType) => {
       return {
         name: sortType,
         count: getFilmsBySort(allFilms, sortType).length,
