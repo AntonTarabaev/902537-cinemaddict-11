@@ -50,3 +50,31 @@ export const DeleteButtonText = {
   DELETE: `Delete`,
   DELETING: `Deleting...`,
 };
+
+export const StatisticFilter = {
+  ALL_TIME: {
+    INPUT: `all-time`,
+    LABEL: `All time`,
+    DAYS: 0,
+  },
+  TODAY: {
+    INPUT: `today`,
+    LABEL: `Today`,
+    DAYS: 1,
+  },
+  WEEK: {
+    INPUT: `week`,
+    LABEL: `Week`,
+    DAYS: 7,
+  },
+  MONTH: {
+    INPUT: `month`,
+    LABEL: `Month`,
+    DAYS: 30,
+  },
+  YEAR: {
+    INPUT: `year`,
+    LABEL: `Year`,
+    DAYS: 365,
+  },
+};

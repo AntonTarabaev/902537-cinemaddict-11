@@ -22,7 +22,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
 const siteMenuComponent = new SiteMenuComponent();
-const statisticsComponent = new StatisticsComponent();
+const statisticsComponent = new StatisticsComponent(moviesModel);
 const loaderComponent = new LoaderComponent();
 const emptyUserRankComponent = new UserRankComponent();
 const emptyFilmsCountComponent = new FilmsCountComponent(0);
