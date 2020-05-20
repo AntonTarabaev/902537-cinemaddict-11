@@ -1,5 +1,5 @@
 const RESPONSE_OK = {
-  MIN_STATUS: 200,
+  DEFAULT_STATUS: 200,
   MAX_STATUS: 299,
 };
 
@@ -11,7 +11,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= RESPONSE_OK.MIN_STATUS && response.status <= RESPONSE_OK.MAX_STATUS) {
+  if (response.status >= RESPONSE_OK.DEFAULT_STATUS && response.status <= RESPONSE_OK.MAX_STATUS) {
     return response;
   }
   throw new Error(`${response.status}: ${response.statusText}`);
@@ -55,6 +55,16 @@ export default class API {
       url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`}),
+    })
+      .then((response) => response.json());
+  }
+
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`}),
     })
       .then((response) => response.json());

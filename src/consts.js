@@ -8,6 +8,8 @@ export const SHAKE_ANIMATION_DURATION = 600;
 
 export const MINUTES_IN_HOUR = 60;
 
+export const PAGE_STATUS_OFFLINE = ` [offline]`;
+
 export const EMOJI = {
   ANGRY: `angry`,
   PUKE: `puke`,
@@ -23,6 +25,11 @@ export const ALLOWED_COMMENT_LENGTH = {
 export const DELETE_BUTTON_TEXT = {
   DELETE: `Delete`,
   DELETING: `Deleting...`,
+};
+
+export const STORE_NAME = {
+  FILMS: `cinemaddict-localstorage-films-v1`,
+  COMMENTS: `cinemaddict-localstorage-comments-v1`
 };
 
 export const UserRanks = {

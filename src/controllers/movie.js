@@ -152,8 +152,10 @@ export default class MovieController {
   }
 
   _removeComments() {
-    this._commentsConroller.destroy();
-    this._commentsConroller = null;
+    if (this._commentsConroller) {
+      this._commentsConroller.destroy();
+      this._commentsConroller = null;
+    }
   }
 
   _renderComments() {
