@@ -1,5 +1,11 @@
 import Movie from "@models/movie";
 
+const PROMISE_REJECT_MESSAGE = {
+  NO_DATA: `No data`,
+  NO_OFFLINE: `Offline logic is not implemented`,
+  SYNC_FAILED: `Sync data failed`,
+};
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
@@ -51,13 +57,13 @@ export default class Provider {
         });
     }
     const filmComments = this._commentsStore.getItems()[filmId];
-    if (this._commentsStore.getItems()[filmId]) {
+    if (filmComments) {
       const storeComments = Object.values(filmComments);
 
       return Promise.resolve(storeComments);
     }
 
-    return Promise.reject(`No data`);
+    return Promise.reject(PROMISE_REJECT_MESSAGE.NO_DATA);
   }
 
   createComment(filmId, comment) {
@@ -73,7 +79,7 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(`Offline logic is not implemented`);
+    return Promise.reject(PROMISE_REJECT_MESSAGE.NO_OFFLINE);
   }
 
   deleteComment(id) {
@@ -84,7 +90,7 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(`Offline logic is not implemented`);
+    return Promise.reject(PROMISE_REJECT_MESSAGE.NO_OFFLINE);
   }
 
   updateFilm(id, data) {
@@ -116,6 +122,6 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(new Error(`Sync data failed`));
+    return Promise.reject(new Error(PROMISE_REJECT_MESSAGE.SYNC_FAILED));
   }
 }
