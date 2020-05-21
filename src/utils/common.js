@@ -1,18 +1,5 @@
-import {ALLOWED_COMMENT_LENGTH, MINUTES_IN_HOUR, UserRanks} from "@consts";
+import {ALLOWED_COMMENT_LENGTH, MINUTES_IN_HOUR} from "@consts";
 import moment from "moment";
-
-export const getUserRank = (watchedFilmsCount) => {
-  if (watchedFilmsCount >= UserRanks.BUFF.FILMS_COUNT) {
-    return UserRanks.BUFF.RANK;
-  }
-  if (watchedFilmsCount >= UserRanks.FAN.FILMS_COUNT) {
-    return UserRanks.FAN.RANK;
-  }
-  if (watchedFilmsCount > UserRanks.NOVICE.FILMS_COUNT) {
-    return UserRanks.NOVICE.RANK;
-  }
-  return UserRanks.NO_RANK.RANK;
-};
 
 export const formatTime = (durationInMinutes) => {
   return moment.utc().startOf(`day`).add({minutes: durationInMinutes}).format(`${durationInMinutes > MINUTES_IN_HOUR ? `h[h]` : ``} mm[m]`);

@@ -178,7 +178,7 @@ export default class PageController {
         const isSuccess = this._moviesModel.updateFilm(oldData.id, filmModel);
         if (isSuccess) {
           movieController.render(filmModel);
-          movieController.updateControlClass(target);
+          movieController.updateCardControlClass(target);
 
           if (this._showedTopRatedMovieControllers.indexOf(movieController) !== -1) {
             this._updateMostCommentedFilms();
@@ -206,6 +206,7 @@ export default class PageController {
       })
       .catch(() => {
         movieController.shake();
+        movieController.updateDetailsControlClass(target);
       });
   }
 

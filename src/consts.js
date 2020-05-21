@@ -32,25 +32,6 @@ export const STORE_NAME = {
   COMMENTS: `cinemaddict-localstorage-comments-v1`
 };
 
-export const UserRanks = {
-  NO_RANK: {
-    FILMS_COUNT: 0,
-    RANK: ``,
-  },
-  NOVICE: {
-    FILMS_COUNT: 1,
-    RANK: `Novice`,
-  },
-  FAN: {
-    FILMS_COUNT: 11,
-    RANK: `Fan`
-  },
-  BUFF: {
-    FILMS_COUNT: 21,
-    RANK: `Movie Buff`
-  }
-};
-
 export const FilterTypes = {
   DEFAULT: `default`,
   DATE: `date`,

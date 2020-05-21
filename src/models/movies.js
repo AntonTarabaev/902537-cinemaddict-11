@@ -1,7 +1,7 @@
 import {SortTypes} from "@consts";
 import {getWatchedFilmsByPeriod} from "@utils/common";
 import {getFilmsBySort} from "@utils/sort";
-import {getUserRank} from "@utils/common";
+import {getUserRank} from "@components/user-rank/user-rank-tpl";
 
 export default class Movies {
   constructor() {

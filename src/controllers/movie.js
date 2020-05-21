@@ -71,12 +71,16 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  updateControlClass(target) {
+  updateDetailsControlClass(target) {
+    if (this._state === State.OPENED) {
+      this._filmDetailsComponent.changeButtonActiveClass(target);
+    }
+  }
+
+  updateCardControlClass(target) {
     if (this._state === State.CLOSED) {
       this._filmCardComponent.changeButtonActiveClass(target);
-      return;
     }
-    this._filmDetailsComponent.changeButtonActiveClass(target);
   }
 
   shake() {
@@ -91,18 +95,15 @@ export default class MovieController {
     this._oldFilmDetailsComponent = this._filmDetailsComponent;
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
 
-    this._filmDetailsComponent.setWatchlistButtonClickHandler((evt) => {
-      evt.preventDefault();
+    this._filmDetailsComponent.setWatchlistButtonClickHandler(() => {
       this._changeFilmWhatchlistPropery(this._film);
     });
 
-    this._filmDetailsComponent.setWatchedButtonClickHandler((evt) => {
-      evt.preventDefault();
+    this._filmDetailsComponent.setWatchedButtonClickHandler(() => {
       this._changeFilmWhatchedtPropery(this._film);
     });
 
-    this._filmDetailsComponent.setFavoriteButtonClickHandler((evt) => {
-      evt.preventDefault();
+    this._filmDetailsComponent.setFavoriteButtonClickHandler(() => {
       this._changeFilmFavoritePropery(this._film);
     });
 
