@@ -1,12 +1,12 @@
 import AbstractComponent from "@components/abstract/abstract-component";
 import {createFilterTemplate} from "./filter-tpl";
-import {FilterType} from "@consts";
+import {FilterTypes} from "@consts";
 
 export default class Filter extends AbstractComponent {
   constructor() {
     super();
 
-    this._currentFilterType = FilterType.DEFAULT;
+    this._currentFilterType = FilterTypes.DEFAULT;
   }
 
   getTemplate() {
@@ -18,7 +18,7 @@ export default class Filter extends AbstractComponent {
   }
 
   setDefaultView() {
-    this._currentFilterType = FilterType.DEFAULT;
+    this._currentFilterType = FilterTypes.DEFAULT;
 
     this.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
     this.getElement().querySelector(`.sort__button[data-filter-type="default"]`).classList.add(`sort__button--active`);

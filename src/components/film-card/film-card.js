@@ -1,6 +1,6 @@
 import AbstractComponent from "@components/abstract/abstract-component";
 import {createFilmCardTemplate} from "./film-card-tpl";
-import {FilmButton, SHAKE_ANIMATION_DURATION} from "@consts";
+import {FilmButtons, SHAKE_ANIMATION_DURATION} from "@consts";
 
 const FILM_CARD_ELEMENTS = [
   `film-card__title`,
@@ -29,13 +29,13 @@ export default class FilmCard extends AbstractComponent {
 
   changeButtonActiveClass(target) {
     switch (target) {
-      case FilmButton.WATCHLIST:
+      case FilmButtons.WATCHLIST:
         this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`));
         break;
-      case FilmButton.HISTORY:
+      case FilmButtons.HISTORY:
         this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`));
         break;
-      case FilmButton.FAVORITES:
+      case FilmButtons.FAVORITES:
         this._changeTargetActiveClass(this.getElement().querySelector(`.film-card__controls-item--favorite`));
         break;
     }

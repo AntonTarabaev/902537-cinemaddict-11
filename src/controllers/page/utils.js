@@ -1,19 +1,19 @@
-import {FilterType} from "@consts";
+import {FilterTypes} from "@consts";
 
 export const getFilteredFilms = (films, filterType, from, to) => {
   let filteredFilms = [];
 
   switch (filterType) {
-    case FilterType.DATE:
+    case FilterTypes.DATE:
       filteredFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
       break;
-    case FilterType.RATING:
+    case FilterTypes.RATING:
       filteredFilms = films.slice().sort((a, b) => b.rating - a.rating);
       break;
-    case FilterType.COMMENTS:
+    case FilterTypes.COMMENTS:
       filteredFilms = films.slice().sort((a, b) => b.commentsCount - a.commentsCount);
       break;
-    case FilterType.DEFAULT:
+    case FilterTypes.DEFAULT:
       filteredFilms = films;
       break;
   }

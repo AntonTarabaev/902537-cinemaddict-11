@@ -1,5 +1,7 @@
-import Movie from "@models/movie";
-import Comment from "@models/comment";
+const RESPONSE_OK = {
+  DEFAULT_STATUS: 200,
+  MAX_STATUS: 299,
+};
 
 const Method = {
   GET: `GET`,
@@ -9,11 +11,10 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= RESPONSE_OK.DEFAULT_STATUS && response.status <= RESPONSE_OK.MAX_STATUS) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 
 export default class API {
@@ -24,14 +25,12 @@ export default class API {
 
   getFilms() {
     return this._load({url: `movies`})
-      .then((response) => response.json())
-      .then(Movie.parseFilms);
+      .then((response) => response.json());
   }
 
   getComments(filmId) {
     return this._load({url: `comments/${filmId}`})
-      .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then((response) => response.json());
   }
 
   createComment(filmId, comment) {
@@ -41,8 +40,7 @@ export default class API {
       body: JSON.stringify(comment.toRAW()),
       headers: new Headers({'Content-Type': `application/json`}),
     })
-      .then((response) => response.json())
-      .then(Comment.parseComment);
+      .then((response) => response.json());
   }
 
   deleteComment(id) {
@@ -59,8 +57,17 @@ export default class API {
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({'Content-Type': `application/json`}),
     })
-      .then((response) => response.json())
-      .then(Movie.parseFilm);
+      .then((response) => response.json());
+  }
+
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`}),
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

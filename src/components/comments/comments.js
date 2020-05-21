@@ -1,6 +1,6 @@
 import {createCommentsTemplate, createEmojiMarkup} from "./comments-tpl";
 import AbstractComponent from "@components/abstract/abstract-component";
-import {SHAKE_ANIMATION_DURATION, DeleteButtonText} from "@consts";
+import {SHAKE_ANIMATION_DURATION, DELETE_BUTTON_TEXT} from "@consts";
 
 export default class Comments extends AbstractComponent {
   constructor(comments) {
@@ -70,7 +70,7 @@ export default class Comments extends AbstractComponent {
   }
 
   changeCommentDeleteButtonText(id) {
-    this.getCommentById(id).querySelector(`.film-details__comment-delete`).textContent = DeleteButtonText.DELETING;
+    this.getCommentById(id).querySelector(`.film-details__comment-delete`).textContent = DELETE_BUTTON_TEXT.DELETING;
   }
 
   shakeComment(id) {
@@ -79,7 +79,7 @@ export default class Comments extends AbstractComponent {
 
     setTimeout(() => {
       comment.classList.remove(`shake`);
-      comment.querySelector(`.film-details__comment-delete`).textContent = DeleteButtonText.DELETE;
+      comment.querySelector(`.film-details__comment-delete`).textContent = DELETE_BUTTON_TEXT.DELETE;
     }, SHAKE_ANIMATION_DURATION);
   }
 

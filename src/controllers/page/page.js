@@ -4,8 +4,9 @@ import FilterComponent from "@components/filter/filter";
 import NoFilmsComponent from "@components/no-films/no-films";
 import ShowMoreButtonComponent from "@components/show-more-button/show-more-button";
 import MovieController from "@controllers/movie";
+import Movie from "@models/movie";
 import {render, remove, RenderPosition} from "@utils/render";
-import {FilterType} from "@consts";
+import {FilterTypes} from "@consts";
 import {FilmSettings, filmsListName} from "./consts";
 import {getFilteredFilms} from "./utils";
 
@@ -106,7 +107,7 @@ export default class PageController {
   }
 
   _renderTopRatedFilms(films) {
-    const topRatedFilms = getFilteredFilms(films, FilterType.RATING, 0, FilmSettings.EXTRA_COUNT);
+    const topRatedFilms = getFilteredFilms(films, FilterTypes.RATING, 0, FilmSettings.EXTRA_COUNT);
 
     if (topRatedFilms.every((film) => film.rating === 0)) {
       return;
@@ -120,7 +121,7 @@ export default class PageController {
   }
 
   _renderMostCommentedFilms(films) {
-    const mostCommentedFilms = getFilteredFilms(films, FilterType.COMMENTS, 0, FilmSettings.EXTRA_COUNT);
+    const mostCommentedFilms = getFilteredFilms(films, FilterTypes.COMMENTS, 0, FilmSettings.EXTRA_COUNT);
 
     if (mostCommentedFilms.every((film) => film.commentsCount === 0)) {
       return;
@@ -134,8 +135,10 @@ export default class PageController {
   }
 
   _updateMainFilms(count) {
+    const filteredFilms = getFilteredFilms(this._moviesModel.getFilms(), this._filterComponent.getFilterType(), 0, count);
+
     this._removeFilms();
-    this._renderFilms(this._moviesModel.getFilms().slice(0, count));
+    this._renderFilms(filteredFilms);
     this._renderShowMoreButton();
   }
 
@@ -170,6 +173,7 @@ export default class PageController {
 
   _onDataChange(movieController, oldData, newData, target) {
     this._api.updateFilm(oldData.id, newData)
+      .then(Movie.parseFilm)
       .then((filmModel) => {
         const isSuccess = this._moviesModel.updateFilm(oldData.id, filmModel);
         if (isSuccess) {
@@ -177,23 +181,27 @@ export default class PageController {
           movieController.updateControlClass(target);
 
           if (this._showedTopRatedMovieControllers.indexOf(movieController) !== -1) {
+            this._updateMostCommentedFilms();
             if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
               this._updateMainFilms(this._moviesModel.getFilms().length);
-            } else {
-              this._updateMainFilms(this._showingFilmsCount);
+              return;
             }
-            this._updateMostCommentedFilms();
-          } else if (this._showedMostCommentedMovieControllers.indexOf(movieController) !== -1) {
-            if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
-              this._updateMainFilms(this._moviesModel.getFilms().length);
-            } else {
-              this._updateMainFilms(this._showingFilmsCount);
-            }
-            this._updateTopRatedFilms();
-          } else {
-            this._updateTopRatedFilms();
-            this._updateMostCommentedFilms();
+            this._updateMainFilms(this._showingFilmsCount);
+            return;
           }
+
+          if (this._showedMostCommentedMovieControllers.indexOf(movieController) !== -1) {
+            this._updateTopRatedFilms();
+            if (this._showingFilmsCount < FilmSettings.SHOWING_ON_START_COUNT) {
+              this._updateMainFilms(this._moviesModel.getFilms().length);
+              return;
+            }
+            this._updateMainFilms(this._showingFilmsCount);
+            return;
+          }
+
+          this._updateTopRatedFilms();
+          this._updateMostCommentedFilms();
         }
       })
       .catch(() => {

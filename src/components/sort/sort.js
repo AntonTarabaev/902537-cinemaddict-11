@@ -1,13 +1,13 @@
 import AbstractComponent from "@components/abstract/abstract-component";
 import {createSortTemplate} from "./sort-tpl";
-import {SortType} from "@consts";
+import {SortTypes} from "@consts";
 
 export default class Sort extends AbstractComponent {
   constructor(sort) {
     super();
 
     this._sort = sort;
-    this._activeSortType = SortType.ALL;
+    this._activeSortType = SortTypes.ALL;
   }
 
   getTemplate() {

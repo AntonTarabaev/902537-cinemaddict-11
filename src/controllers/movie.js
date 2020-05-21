@@ -2,10 +2,12 @@ import FilmCardComponent from "@components/film-card/film-card";
 import FilmDetailsComponent from "@components/film-details/film-details";
 import CommentsController from "@controllers/comment";
 import CommentsModel from "@models/comments";
+import Comment from "@models/comment";
+import CommentsLoader from "@components/comments-loader/comments-loader";
 import MovieModel from "@models/movie";
 import {isEscPressed} from "@utils/common";
 import {render, RenderPosition, replace, remove} from "@utils/render";
-import {FilmButton} from "@consts";
+import {FilmButtons} from "@consts";
 
 const State = {
   OPENED: `opened`,
@@ -49,10 +51,12 @@ export default class MovieController {
     if (this._state === State.CLOSED) {
       this._renderFilmDetails();
       replace(this._filmDetailsComponent, this._oldFilmDetailsComponent);
-    } else {
-      this._renderFilmCard();
-      replace(this._filmCardComponent, this._oldFilmCardComponent);
+
+      return;
     }
+
+    this._renderFilmCard();
+    replace(this._filmCardComponent, this._oldFilmCardComponent);
   }
 
   setDefaultView() {
@@ -70,17 +74,17 @@ export default class MovieController {
   updateControlClass(target) {
     if (this._state === State.CLOSED) {
       this._filmCardComponent.changeButtonActiveClass(target);
-    } else {
-      this._filmDetailsComponent.changeButtonActiveClass(target);
+      return;
     }
+    this._filmDetailsComponent.changeButtonActiveClass(target);
   }
 
   shake() {
     if (this._state === State.CLOSED) {
       this._filmCardComponent.shake();
-    } else {
-      this._filmDetailsComponent.shake();
+      return;
     }
+    this._filmDetailsComponent.shake();
   }
 
   _renderFilmDetails() {
@@ -148,23 +152,33 @@ export default class MovieController {
   }
 
   _removeComments() {
-    this._commentsConroller.destroy();
-    this._commentsConroller = null;
+    if (this._commentsConroller) {
+      this._commentsConroller.destroy();
+      this._commentsConroller = null;
+    }
   }
 
   _renderComments() {
     const commentsContainer = this._filmDetailsComponent.getCommentsContainer();
+    const commentsLoader = new CommentsLoader();
+    render(commentsContainer, commentsLoader, RenderPosition.BEFOREEND);
 
     this._api.getComments(this._film.id)
+      .then(Comment.parseComments)
       .then((comments) => {
+        remove(commentsLoader);
         this._commentsModel.setComments(comments);
         this._commentsConroller = new CommentsController(commentsContainer, this._onCommentDataChange);
         this._commentsConroller.render(this._commentsModel.getComments());
+      })
+      .catch(() => {
+        commentsLoader.renderLoaderError();
       });
   }
 
   _addNewComment() {
     this._api.getComments(this._film.id)
+      .then(Comment.parseComments)
       .then((comments) => {
         this._commentsModel.setComments(comments);
         this._commentsConroller.renderFirstComment(this._commentsModel.getComments());
@@ -174,30 +188,33 @@ export default class MovieController {
 
   _changeFilmWhatchlistPropery(film) {
     const newFilm = MovieModel.clone(film);
-    const target = FilmButton.WATCHLIST;
+    const target = FilmButtons.WATCHLIST;
 
     newFilm.isInWatchlist = !newFilm.isInWatchlist;
-    if (newFilm.isInWatchlist) {
-      newFilm.watchingDate = new Date();
-    } else {
-      newFilm.watchingDate = new Date(null);
-    }
 
     this._onDataChange(this, film, newFilm, target);
   }
 
   _changeFilmWhatchedtPropery(film) {
     const newFilm = MovieModel.clone(film);
-    const target = FilmButton.HISTORY;
+    const target = FilmButtons.HISTORY;
 
     newFilm.isWatched = !newFilm.isWatched;
+    switch (newFilm.isWatched) {
+      case true:
+        newFilm.watchingDate = new Date();
+        break;
+      case false:
+        newFilm.watchingDate = null;
+        break;
+    }
 
     this._onDataChange(this, film, newFilm, target);
   }
 
   _changeFilmFavoritePropery(film) {
     const newFilm = MovieModel.clone(film);
-    const target = FilmButton.FAVORITES;
+    const target = FilmButtons.FAVORITES;
 
     newFilm.isFavorite = !newFilm.isFavorite;
 
@@ -213,8 +230,9 @@ export default class MovieController {
 
   _onCommentDataChange(oldDataId, newData) {
     this._commentsConroller.changeFormElementsDisabledProperty(true);
-    this._commentsConroller.changeCommentDeleteButtonText(oldDataId);
+
     if (newData === null) {
+      this._commentsConroller.changeCommentDeleteButtonText(oldDataId);
       this._api.deleteComment(oldDataId)
         .then(() => {
           this._commentsModel.removeComment(oldDataId);
@@ -226,20 +244,22 @@ export default class MovieController {
           this._commentsConroller.shakeComment(oldDataId);
           this._commentsConroller.changeFormElementsDisabledProperty(false);
         });
-    } else {
-      this._commentsConroller.changeFormElementsDisabledProperty(true);
-      this._api.createComment(this._film.id, newData)
-        .then(() => {
-          this._onCommentChange();
-          this._addNewComment();
-          this._commentsConroller.cleanForm();
-          this._commentsConroller.changeFormElementsDisabledProperty(false);
-        })
-        .catch(() => {
-          this._commentsConroller.shakeForm();
-          this._commentsConroller.changeFormElementsDisabledProperty(false);
-        });
+
+      return;
     }
+    this._commentsConroller.changeFormElementsDisabledProperty(true);
+    this._api.createComment(this._film.id, newData)
+      .then(Comment.parseComment)
+      .then(() => {
+        this._onCommentChange();
+        this._addNewComment();
+        this._commentsConroller.cleanForm();
+        this._commentsConroller.changeFormElementsDisabledProperty(false);
+      })
+      .catch(() => {
+        this._commentsConroller.shakeForm();
+        this._commentsConroller.changeFormElementsDisabledProperty(false);
+      });
   }
 
   _onCommentChange() {

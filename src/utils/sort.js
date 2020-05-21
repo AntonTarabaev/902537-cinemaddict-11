@@ -1,4 +1,4 @@
-import {SortType} from "@consts";
+import {SortTypes} from "@consts";
 
 const getWatchedFilms = (films) => {
   return films.filter((film) => film.isWatched);
@@ -14,11 +14,11 @@ const getFavoriteFilms = (films) => {
 
 export const getFilmsBySort = (films, sortType) => {
   switch (sortType) {
-    case SortType.FAVORITES:
+    case SortTypes.FAVORITES:
       return getFavoriteFilms(films);
-    case SortType.HISTORY:
+    case SortTypes.HISTORY:
       return getWatchedFilms(films);
-    case SortType.WATCHLIST:
+    case SortTypes.WATCHLIST:
       return getFilmsInWatchlist(films);
     default:
       return films;

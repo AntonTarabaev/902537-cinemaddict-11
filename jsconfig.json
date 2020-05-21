@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "baseUrl": "./src/",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@utils/*": ["utils/*"],
+      "@components/*": ["components/*"],
+      "@controllers/*": ["controllers/*"],
+      "@models/*": ["models/*"],
+      "@consts": ["consts.js"]
+    }
+  }
+}
