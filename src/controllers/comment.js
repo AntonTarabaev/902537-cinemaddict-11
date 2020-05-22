@@ -102,6 +102,8 @@ export default class CommentsController {
         return;
       }
 
+      this._commentsComponent.removeCommentTextInvalidClass();
+
       this._onCommentDataChange(null, data);
     }
   }

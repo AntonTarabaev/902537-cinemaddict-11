@@ -1,7 +1,6 @@
-import Chart from "chart.js";
-import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "@components/abstract/abstract-smart-component";
 import {createStatisticsTemplate} from "./statistics-tpl";
+import {renderStatisticsChart} from "./statistics-chart";
 import {StatisticFilters} from "../../consts";
 
 export default class Statistics extends AbstractSmartComponent {
@@ -53,67 +52,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _renderChart() {
-    const BAR_HEIGHT = 50;
-    const statisticCtx = document.querySelector(`.statistic__chart`);
-
-    statisticCtx.height = BAR_HEIGHT * this._chartData.length;
-
-    this._chart = new Chart(statisticCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-        labels: this._chartLabels,
-        datasets: [{
-          data: this._chartFilmsCounts,
-          backgroundColor: `#ffe800`,
-          hoverBackgroundColor: `#ffe800`,
-          anchor: `start`,
-          barThickness: 24,
-        }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            font: {
-              size: 20,
-            },
-            color: `#ffffff`,
-            anchor: `start`,
-            align: `start`,
-            offset: 40,
-          }
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: `#ffffff`,
-              padding: 100,
-              fontSize: 20
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-          }],
-          xAxes: [{
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-          }],
-        },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-        }
-      }
-    });
+    this._chart = renderStatisticsChart(this._chartData, this._chartLabels, this._chartFilmsCounts);
   }
 
   _setFilterChangeHandlers() {

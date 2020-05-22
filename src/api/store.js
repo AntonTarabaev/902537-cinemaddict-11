@@ -34,9 +34,9 @@ export default class Store {
 
   removeDeepItem(key) {
     const store = this.getItems();
-    Object.values(store).forEach((it, i) => {
-      if (it[key] !== null) {
-        delete store[i][key];
+    Object.keys(store).forEach((it) => {
+      if (store[it][key]) {
+        delete store[it][key];
       }
     });
 

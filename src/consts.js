@@ -1,4 +1,4 @@
-export const AUTHORIZATION = `Basic f1dasdf834967dfHJdjsk=`;
+export const AUTHORIZATION = `Basic f1daiudfhasd8970HJdjsk=`;
 
 export const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 

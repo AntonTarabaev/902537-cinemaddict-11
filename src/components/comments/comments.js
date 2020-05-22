@@ -65,6 +65,10 @@ export default class Comments extends AbstractComponent {
     this.getElement().querySelector(`.film-details__add-emoji-label`).classList.remove(`invalid-comment`);
   }
 
+  removeCommentTextInvalidClass() {
+    this.getElement().querySelector(`.film-details__comment-input`).classList.remove(`invalid-comment`);
+  }
+
   removeElement() {
     super.removeElement();
   }

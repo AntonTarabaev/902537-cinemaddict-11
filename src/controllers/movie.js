@@ -134,6 +134,10 @@ export default class MovieController {
   }
 
   _openFilmDetails() {
+    if (this._state === State.OPENED) {
+      return;
+    }
+
     this._renderFilmDetails();
     const siteMainElement = document.querySelector(`.main`);
 
