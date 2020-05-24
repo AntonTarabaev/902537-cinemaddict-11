@@ -30,6 +30,7 @@ const loaderComponent = new LoaderComponent();
 const emptyUserRankComponent = new UserRankComponent();
 const emptyFilmsCountComponent = new FilmsCountComponent(0);
 const temporaryFilterComponent = new FilterComponent();
+
 const sortController = new SortController(siteMenuComponent.getElement(), moviesModel);
 const pageController = new PageController(siteMainElement, moviesModel, apiWithProvider);
 
